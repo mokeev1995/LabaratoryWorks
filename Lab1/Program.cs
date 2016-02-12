@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ConsoleApplication1
+namespace Lab1
 {
 	internal static class Program
 	{
 		private static void Main()
 		{
-			var words = GetWords();
+			Console.WriteLine("Enter file name *.txt");
+			var name = Console.ReadLine();
+
+			var words = GetWords(name);
 
 			IFrequencyCounter list = new TimeWatcher(new DictFreq());
 			var res = list.GetCount(words);
@@ -43,10 +46,15 @@ namespace ConsoleApplication1
 			}
 		}
 
-		private static List<string> GetWords()
+		private static List<string> GetWords(string filename)
 		{
+			filename = filename + ".txt";
+
+			if (!File.Exists(filename))
+				throw new FileNotFoundException(filename);
+
 			var words = new List<string>();
-			using (var sr = new StreamReader("anna.txt"))
+			using (var sr = new StreamReader(filename))
 			{
 				string line;
 				while ((line = sr.ReadLine()) != null)

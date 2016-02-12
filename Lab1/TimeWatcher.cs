@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ConsoleApplication1
+namespace Lab1
 {
 	public class TimeWatcher : IFrequencyCounter, IDisposable
 	{

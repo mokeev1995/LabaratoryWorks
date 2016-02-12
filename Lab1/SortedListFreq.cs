@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConsoleApplication1
+namespace Lab1
 {
 	public class SortedListFreq : IFrequencyCounter
 	{
