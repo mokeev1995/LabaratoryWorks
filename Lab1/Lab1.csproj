@@ -43,9 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DictFreq.cs" />
     <Compile Include="FreqResult.cs" />
+    <Compile Include="IFrequencyCounter.cs" />
+    <Compile Include="ListFreq.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SortedDictFreq.cs" />
+    <Compile Include="SortedListFreq.cs" />
+    <Compile Include="TimeWatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
