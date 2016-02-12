@@ -5,14 +5,23 @@ namespace ConsoleApplication1
 {
 	public class TimeWatcher : IFrequencyCounter, IDisposable
 	{
-		private IFrequencyCounter _counter;
-		private DateTime _startTime;
+		private readonly IFrequencyCounter _counter;
+		private bool _disposed;
 		private DateTime _endTime;
-		private bool _disposed = false;
+		private DateTime _startTime;
 
 		public TimeWatcher(IFrequencyCounter counter)
 		{
 			_counter = counter;
+		}
+
+		public void Dispose()
+		{
+			if (_disposed)
+				return;
+			var time = _endTime - _startTime;
+			Console.WriteLine($"{_counter.GetType()} : \t{time.Minutes}:{time.Seconds}:{time.Milliseconds}");
+			_disposed = true;
 		}
 
 		public FreqResult GetCount(IEnumerable<string> words)
@@ -26,15 +35,6 @@ namespace ConsoleApplication1
 		~TimeWatcher()
 		{
 			Dispose();
-		}
-
-		public void Dispose()
-		{
-			if(_disposed)
-				return;
-			var time = _endTime - _startTime;
-			Console.WriteLine($"{_counter.GetType()} : \t{time.Minutes}:{time.Seconds}:{time.Milliseconds}");
-			_disposed = true;
 		}
 	}
 }
