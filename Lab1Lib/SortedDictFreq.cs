@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Lab1
+namespace Lab1Lib
 {
 	public class SortedDictFreq : IFrequencyCounter
 	{
