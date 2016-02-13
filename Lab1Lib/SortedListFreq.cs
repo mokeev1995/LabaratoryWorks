@@ -20,7 +20,7 @@ namespace Lab1Lib
 				}
 			}
 
-			var result = uniqueWords.OrderBy(pair => pair.Value);
+			var result = uniqueWords.OrderBy(pair => pair.Value).Reverse().ToArray();
 			return new FreqResult(uniqueWords.Count, result.Take(10));
 		}
 	}

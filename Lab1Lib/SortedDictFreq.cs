@@ -20,9 +20,9 @@ namespace Lab1Lib
 				}
 			}
 
-			var result = uniqueWords.OrderByDescending(pair => pair.Value);
+			var result = uniqueWords.OrderBy(pair => pair.Value);
 
-			return new FreqResult(uniqueWords.Count, result.Take(10));
+			return new FreqResult(uniqueWords.Count, result.Reverse().Take(10));
 		}
 	}
 }

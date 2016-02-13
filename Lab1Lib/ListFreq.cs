@@ -5,25 +5,38 @@ namespace Lab1Lib
 {
 	public class ListFreq : IFrequencyCounter
 	{
+		private class WordCountPair<TKey, TValue>
+		{
+			public TKey Word { get; }
+			public TValue Count { get; set; }
+
+			public WordCountPair(TKey word, TValue count)
+			{
+				Word = word;
+				Count = count;
+			}
+		}
+
 		public FreqResult GetCount(IEnumerable<string> words)
 		{
-			var uniqueWords = new List<KeyValuePair<string, int>>();
+			var uniqueWords = new List<WordCountPair<string, int>>();
 			foreach (var word in words)
 			{
-				if (uniqueWords.Any(wc => wc.Key == word))
+				if (uniqueWords.Any(wc => wc.Word == word))
 				{
-					var uniqueWord = uniqueWords.First(wc => wc.Key == word);
-					uniqueWords.Remove(uniqueWord);
-					uniqueWords.Add(new KeyValuePair<string, int>(uniqueWord.Key, uniqueWord.Value + 1));
+					var uniqueWord = uniqueWords.First(wc => wc.Word == word);
+					uniqueWord.Count++;
 				}
 				else
 				{
-					uniqueWords.Add(new KeyValuePair<string, int>(word, 1));
+					uniqueWords.Add(new WordCountPair<string, int>(word, 1));
 				}
 			}
 
-			uniqueWords.Sort((first, second) => first.Value.CompareTo(second.Value));
-			return new FreqResult(uniqueWords.Count, uniqueWords.Take(10));
+			uniqueWords.Sort((first, second) => second.Count.CompareTo(first.Count));
+
+			return new FreqResult(uniqueWords.Count,
+				uniqueWords.Select(uw => new KeyValuePair<string, int>(uw.Word, uw.Count)).Take(10));
 		}
 	}
 }

@@ -25,12 +25,12 @@ namespace Lab1
 			PrintResults(res);
 			((IDisposable) list).Dispose();
 
-			list = new TimeWatcher(new ListFreq());
+			list = new TimeWatcher(new SortedListFreq());
 			res = list.GetCount(words);
 			PrintResults(res);
-			((IDisposable) list).Dispose();
+			((IDisposable)list).Dispose();
 
-			list = new TimeWatcher(new SortedListFreq());
+			list = new TimeWatcher(new ListFreq());
 			res = list.GetCount(words);
 			PrintResults(res);
 			((IDisposable) list).Dispose();
@@ -40,10 +40,11 @@ namespace Lab1
 
 		private static void PrintResults(FreqResult res)
 		{
-			Console.WriteLine($"{res.Count} : ");
+			Console.WriteLine();
+			Console.WriteLine($"Всего найдено {res.Count} уникальных слов, из которых самые частые: ");
 			foreach (var keyValuePair in res.TopResults)
 			{
-				Console.WriteLine($"{keyValuePair.Key} : {keyValuePair.Value}");
+				Console.WriteLine($"\t{keyValuePair.Key}\t: {keyValuePair.Value} повторов");
 			}
 		}
 
