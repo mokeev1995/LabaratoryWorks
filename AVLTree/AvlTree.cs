@@ -16,7 +16,7 @@ namespace AVLTree
 		{
 			if (_rootTree == null)
 			{
-				_rootTree = new SubTree<TValue>(item);
+				_rootTree = new SubTree<TValue>(new Node<TValue>(item, 0));
 			}
 			else
 			{

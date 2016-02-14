@@ -4,14 +4,15 @@ using System.Collections.Generic;
 
 namespace AVLTree
 {
-	public class SubTree<TValue> : IEnumerable<TValue> where TValue : IComparable
+	public class SubTree<TValue> : IEnumerable<Node<TValue>> where TValue : IComparable
 	{
-		public SubTree(TValue value)
+		public SubTree(Node<TValue> node)
 		{
-			Value = value;
+			Data = node;
 		}
 
-		public TValue Value { get; }
+		public Node<TValue> Data { get; }
+
 
 		public int Height
 		{
@@ -33,7 +34,7 @@ namespace AVLTree
 				{
 					return LeftSubtree.Height;
 				}
-				
+
 				//all of subtrees are null
 				return 0;
 			}
@@ -42,10 +43,10 @@ namespace AVLTree
 		private SubTree<TValue> LeftSubtree { get; set; }
 		private SubTree<TValue> RightSubtree { get; set; }
 
-		public IEnumerator<TValue> GetEnumerator()
+		public IEnumerator<Node<TValue>> GetEnumerator()
 		{
 			// first of all return current value
-			yield return Value;
+			yield return Data;
 
 			// save all nodes we checking for subtrees in near future
 			var subtrees = new Queue<SubTree<TValue>>();
@@ -77,19 +78,37 @@ namespace AVLTree
 
 		public void Add(TValue value)
 		{
-			var compare = value.CompareTo(Value);
-			if (compare == 0)
-				throw new ArgumentException("The same value already exists in tree.",nameof(value));
-			if (compare < 0)
+			var current = this;
+			var level = 0;
+			while (true)
 			{
-				if(LeftSubtree == null)
-					LeftSubtree = new SubTree<TValue>(value);
+				var compare = value.CompareTo(Data);
+
+				if (compare == 0)
+					throw new ArgumentException("The same value already exists in tree.", nameof(value));
+
+				if (compare < 0)
+				{
+					if (current.LeftSubtree == null)
+					{
+						current.LeftSubtree = new SubTree<TValue>(new Node<TValue>(value, level));
+						return;
+					}
+
+					current = current.LeftSubtree;
+				}
 				else
-					LeftSubtree.Add(value);
-			}
-			else
-			{
-				
+				{
+					if (current.RightSubtree == null)
+					{
+						current.RightSubtree = new SubTree<TValue>(new Node<TValue>(value, level));
+						return;
+					}
+
+					current = current.RightSubtree;
+				}
+
+				level++;
 			}
 		}
 
@@ -98,19 +117,19 @@ namespace AVLTree
 			var current = this;
 			while (current != null)
 			{
-				if (current.Value.CompareTo(item) == 0)
+				if (current.Data.CompareTo(item) == 0)
 					return true;
 
 				if (current.LeftSubtree == null && current.RightSubtree == null)
 					return false;
 
-				if (current.Value.CompareTo(item) > 0)
+				if (current.Data.CompareTo(item) > 0)
 				{
 					current = current.LeftSubtree;
 				}
 				else
 				{
-					if (current.Value.CompareTo(item) < 0)
+					if (current.Data.CompareTo(item) < 0)
 						current = current.RightSubtree;
 				}
 			}
