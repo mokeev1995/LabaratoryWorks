@@ -79,10 +79,10 @@ namespace AVLTree
 		public void Add(TValue value)
 		{
 			var current = this;
-			var level = 0;
+			var level = 1;
 			while (true)
 			{
-				var compare = value.CompareTo(Data);
+				var compare = value.CompareTo(current.Data.Value);
 
 				if (compare == 0)
 					throw new ArgumentException("The same value already exists in tree.", nameof(value));
@@ -117,19 +117,19 @@ namespace AVLTree
 			var current = this;
 			while (current != null)
 			{
-				if (current.Data.CompareTo(item) == 0)
+				if (current.Data.Value.CompareTo(item) == 0)
 					return true;
 
 				if (current.LeftSubtree == null && current.RightSubtree == null)
 					return false;
 
-				if (current.Data.CompareTo(item) > 0)
+				if (current.Data.Value.CompareTo(item) > 0)
 				{
 					current = current.LeftSubtree;
 				}
 				else
 				{
-					if (current.Data.CompareTo(item) < 0)
+					if (current.Data.Value.CompareTo(item) < 0)
 						current = current.RightSubtree;
 				}
 			}

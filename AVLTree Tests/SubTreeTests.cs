@@ -28,34 +28,74 @@ namespace AVLTree_Tests
 		}
 
 		[TestMethod]
-		public void Add_Test()
+		public void AddItem_Test()
 		{
 			_subTree.Add(1);
 			_subTree.Add(7);
+			_subTree.Add(8);
 
 			var foundOne = false;
 			var foundSeven = false;
+			var foundEight = false;
 			foreach (var node in _subTree)
 			{
-				if (node == 1)
+				switch (node.Value)
 				{
-					foundOne = true;
-				}
-				else if (node == 7)
-				{
-					foundSeven = true;
+					case 1:
+						foundOne = true;
+						break;
+					case 7:
+						foundSeven = true;
+						break;
+					case 8:
+						foundEight = true;
+						break;
 				}
 			}
 
 			Assert.AreEqual(true, foundOne);
 			Assert.AreEqual(true, foundSeven);
+			Assert.AreEqual(true, foundEight);
+		}
+
+		[TestMethod]
+		public void ItemLevelAfterAdd_Test()
+		{
+			_subTree.Add(1);
+			_subTree.Add(7);
+			_subTree.Add(8);
+
+			foreach (var node in _subTree)
+			{
+				switch (node.Value)
+				{
+					case 5:
+						Assert.AreEqual(0, node.Level);
+						break;
+					case 1:
+						Assert.AreEqual(1, node.Level);
+						break;
+					case 7:
+						Assert.AreEqual(1, node.Level);
+						break;
+					case 8:
+						Assert.AreEqual(2, node.Level);
+						break;
+				}
+			}
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentException), "The same value already exists in tree.")]
 		public void AddExistingItem_Test()
 		{
-			_subTree.Add(5);
+			_subTree.Add(1);
+			_subTree.Add(2);
+			_subTree.Add(7);
+			_subTree.Add(9);
+			_subTree.Add(4);
+
+			_subTree.Add(2); //Here exception required
 		}
 
 		[TestMethod]

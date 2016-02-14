@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Lab1Lib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -53,7 +54,8 @@ namespace Lab1Tests
 					new KeyValuePair<string, int>("ghjkghjk", 1)
 				});
 
-			Assert.AreEqual(true, expected == data);
+			Assert.AreEqual(true, FirstEqual(expected.TopResults, data.TopResults, 2));
+			Assert.AreEqual(expected.Count, data.Count);
 		}
 
 		[TestMethod]
@@ -77,7 +79,8 @@ namespace Lab1Tests
 					new KeyValuePair<string, int>("das", 1)
 				});
 
-			Assert.AreEqual(true, expected == data);
+			Assert.AreEqual(true, FirstEqual(expected.TopResults, data.TopResults, 2));
+			Assert.AreEqual(expected.Count, data.Count);
 		}
 
 		[TestMethod]
@@ -101,7 +104,8 @@ namespace Lab1Tests
 					new KeyValuePair<string, int>("aaaa", 1)
 				});
 
-			Assert.AreEqual(true, expected == data);
+			Assert.AreEqual(true, FirstEqual(expected.TopResults, data.TopResults, 2));
+			Assert.AreEqual(expected.Count, data.Count);
 		}
 
 		[TestMethod]
@@ -125,7 +129,24 @@ namespace Lab1Tests
 					new KeyValuePair<string, int>("das", 1)
 				});
 
-			Assert.AreEqual(true, expected == data);
+			Assert.AreEqual(true, FirstEqual(expected.TopResults, data.TopResults, 2));
+			Assert.AreEqual(expected.Count, data.Count);
+		}
+
+		private bool FirstEqual(IEnumerable<KeyValuePair<string, int>> firstItems, IEnumerable<KeyValuePair<string, int>> secondItems, int count)
+		{
+			var firstData = firstItems.ToArray();
+			var secondData = secondItems.ToArray();
+
+			for (int i = 0; i < count; i++)
+			{
+				if (firstData[i].Key != secondData[i].Key)
+					return false;
+				if (firstData[i].Value != secondData[i].Value)
+					return false;
+			}
+
+			return true;
 		}
 	}
 }
