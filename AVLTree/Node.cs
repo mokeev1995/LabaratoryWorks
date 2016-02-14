@@ -12,6 +12,10 @@ namespace AVLTree
 
 		public TValue Value { get; }
 		public int Level { get; }
-		
+
+		public override string ToString()
+		{
+			return $"Value: {Value}, Level: {Level}";
+		}
 	}
 }

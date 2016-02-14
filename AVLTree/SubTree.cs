@@ -13,7 +13,6 @@ namespace AVLTree
 
 		public Node<TValue> Data { get; }
 
-
 		public int Height
 		{
 			get
@@ -22,17 +21,17 @@ namespace AVLTree
 				{
 					var right = RightSubtree.Height;
 					var left = LeftSubtree.Height;
-					return right > left ? right : left;
+					return right > left ? right + 1 : left + 1;
 				}
 
 				if (RightSubtree != null)
 				{
-					return RightSubtree.Height;
+					return RightSubtree.Height + 1;
 				}
 
 				if (LeftSubtree != null)
 				{
-					return LeftSubtree.Height;
+					return LeftSubtree.Height + 1;
 				}
 
 				//all of subtrees are null
@@ -42,39 +41,6 @@ namespace AVLTree
 
 		private SubTree<TValue> LeftSubtree { get; set; }
 		private SubTree<TValue> RightSubtree { get; set; }
-
-		public IEnumerator<Node<TValue>> GetEnumerator()
-		{
-			// first of all return current value
-			yield return Data;
-
-			// save all nodes we checking for subtrees in near future
-			var subtrees = new Queue<SubTree<TValue>>();
-
-			if (LeftSubtree == null && RightSubtree == null)
-				yield break;
-
-			if (LeftSubtree != null)
-			{
-				foreach (var value in LeftSubtree)
-				{
-					yield return value;
-				}
-			}
-
-			if (RightSubtree != null)
-			{
-				foreach (var value in RightSubtree)
-				{
-					yield return value;
-				}
-			}
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
 
 		public void Add(TValue value)
 		{
@@ -135,6 +101,39 @@ namespace AVLTree
 			}
 
 			return false;
+		}
+
+		public IEnumerator<Node<TValue>> GetEnumerator()
+		{
+			// first of all return current value
+			yield return Data;
+
+			// save all nodes we checking for subtrees in near future
+			var subtrees = new Queue<SubTree<TValue>>();
+
+			if (LeftSubtree == null && RightSubtree == null)
+				yield break;
+
+			if (LeftSubtree != null)
+			{
+				foreach (var value in LeftSubtree)
+				{
+					yield return value;
+				}
+			}
+
+			if (RightSubtree != null)
+			{
+				foreach (var value in RightSubtree)
+				{
+					yield return value;
+				}
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 	}
 }

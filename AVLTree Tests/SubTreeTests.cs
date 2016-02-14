@@ -107,6 +107,33 @@ namespace AVLTree_Tests
 			Assert.AreEqual(true, _subTree.Contains(5));
 			Assert.AreEqual(true, _subTree.Contains(1));
 			Assert.AreEqual(true, _subTree.Contains(7));
+
+			Assert.AreEqual(false, _subTree.Contains(9));
 		}
+
+		[TestMethod]
+		public void Height_Test()
+		{
+			Assert.AreEqual(0, _subTree.Height);
+
+			_subTree.Add(7);
+			Assert.AreEqual(1, _subTree.Height);
+
+			_subTree.Add(8);
+			Assert.AreEqual(2, _subTree.Height);
+
+			_subTree.Add(3);
+			Assert.AreEqual(2, _subTree.Height);
+
+			_subTree.Add(1);
+			Assert.AreEqual(2, _subTree.Height);
+
+			_subTree.Add(4);
+			Assert.AreEqual(2, _subTree.Height);
+
+			_subTree.Add(-1);
+			Assert.AreEqual(3, _subTree.Height);
+		}
+
 	}
 }
