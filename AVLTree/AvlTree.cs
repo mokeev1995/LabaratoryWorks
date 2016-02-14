@@ -76,12 +76,12 @@ namespace AVLTree
 
 		public bool Contains(Node<TValue> item)
 		{
-			throw new NotImplementedException();
+			return _rootTree.Contains(item.Value);
 		}
 
 		public bool Contains(TValue item)
 		{
-			throw new NotImplementedException();
+			return _rootTree.Contains(item);
 		}
 
 		public void CopyTo(Node<TValue>[] array, int arrayIndex)
