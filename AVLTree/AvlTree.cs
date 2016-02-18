@@ -61,7 +61,7 @@ namespace AVLTree
 
 		public bool Remove(Node<TValue> item)
 		{
-			throw new NotImplementedException();
+			return Remove(item.Value);
 		}
 
 		public bool Remove(TValue item)
