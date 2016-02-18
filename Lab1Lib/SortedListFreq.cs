@@ -12,7 +12,7 @@ namespace Lab1Lib
 			{
 				if (uniqueWords.ContainsKey(word.ToLower()))
 				{
-					uniqueWords[word]++;
+					uniqueWords[word.ToLower()]++;
 				}
 				else
 				{
@@ -20,7 +20,7 @@ namespace Lab1Lib
 				}
 			}
 
-			var result = uniqueWords.OrderBy(pair => pair.Value).Reverse().ToArray();
+			var result = uniqueWords.OrderByDescending(pair => pair.Value).ToArray();
 			return new FreqResult(uniqueWords.Count, result.Take(10));
 		}
 	}
