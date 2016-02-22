@@ -12,7 +12,7 @@ namespace AVLTree_Tests
 		[TestInitialize]
 		public void Init()
 		{
-			_subTree = new SubTree<int>(new Node<int>(5,0));
+			_subTree = new SubTree<int>(new Node<int>(5,0), null);
 		}
 
 		[TestMethod]

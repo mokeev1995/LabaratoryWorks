@@ -22,9 +22,9 @@ namespace Lab1Lib
 			var uniqueWords = new List<WordCountPair<string, int>>();
 			foreach (var word in words)
 			{
-				if (uniqueWords.Any(wc => wc.Word == word))
+				var uniqueWord = uniqueWords.FirstOrDefault(wc => wc.Word == word);
+				if (uniqueWord != null)
 				{
-					var uniqueWord = uniqueWords.First(wc => wc.Word == word);
 					uniqueWord.Count++;
 				}
 				else

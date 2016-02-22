@@ -6,12 +6,15 @@ namespace AVLTree
 {
 	public class SubTree<TValue> : IEnumerable<Node<TValue>> where TValue : IComparable
 	{
-		public SubTree(Node<TValue> node)
+		public SubTree(Node<TValue> node, SubTree<TValue> parentSubTree)
 		{
 			Data = node;
+			_parentSubTree = parentSubTree;
 		}
 
 		public Node<TValue> Data { get; }
+
+		private readonly SubTree<TValue> _parentSubTree;
 
 		public int Height
 		{
@@ -39,6 +42,26 @@ namespace AVLTree
 			}
 		}
 
+		private int LeftHeight
+		{
+			get
+			{
+				if (LeftSubtree == null)
+					return 0;
+				return LeftSubtree.Height + 1;
+			}
+		}
+
+		private int RightHeight
+		{
+			get
+			{
+				if (RightSubtree == null)
+					return 0;
+				return RightSubtree.Height + 1;
+			}
+		}
+
 		private SubTree<TValue> LeftSubtree { get; set; }
 		private SubTree<TValue> RightSubtree { get; set; }
 
@@ -57,7 +80,8 @@ namespace AVLTree
 				{
 					if (current.LeftSubtree == null)
 					{
-						current.LeftSubtree = new SubTree<TValue>(new Node<TValue>(value, level));
+						current.LeftSubtree = new SubTree<TValue>(new Node<TValue>(value, level), current);
+						BalanceAfterAdd(current);
 						return;
 					}
 
@@ -67,7 +91,8 @@ namespace AVLTree
 				{
 					if (current.RightSubtree == null)
 					{
-						current.RightSubtree = new SubTree<TValue>(new Node<TValue>(value, level));
+						current.RightSubtree = new SubTree<TValue>(new Node<TValue>(value, level), current);
+						BalanceAfterAdd(current);
 						return;
 					}
 
@@ -75,6 +100,27 @@ namespace AVLTree
 				}
 
 				level++;
+			}
+		}
+
+		private static void BalanceAfterAdd(SubTree<TValue> tree)
+		{
+			var br = "--------------------------------------------------------------------------------------------------------------------------------";
+			Console.WriteLine(br);
+			var current = tree;
+			while (current != null)
+			{
+				Console.WriteLine($"|\tValue: {current.Data.Value}\t" +
+				                  $"|\tLevel: {current.Data.Level}\t" +
+				                  $"|\tCurrent Height: {current.Height}\t" +
+				                  $"|\tLeft Height: {current.LeftHeight}\t" +
+				                  $"|\tRight Height: {current.RightHeight}");
+				if (Math.Abs(current.LeftHeight - current.RightHeight) > 1)
+				{
+					Console.WriteLine(br);
+					Console.WriteLine("Need balance!");
+				}
+				current = current._parentSubTree;
 			}
 		}
 
@@ -134,6 +180,11 @@ namespace AVLTree
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
+		}
+
+		public override string ToString()
+		{
+			return $"Value: {Data}, Current Height: {Height}, Left Height: {LeftHeight}, Right Height: {RightHeight}";
 		}
 	}
 }

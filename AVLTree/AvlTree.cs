@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace AVLTree
 {
@@ -50,7 +49,7 @@ namespace AVLTree
 		{
 			if (_rootTree == null)
 			{
-				_rootTree = new SubTree<TValue>(new Node<TValue>(item, 0));
+				_rootTree = new SubTree<TValue>(new Node<TValue>(item, 0), null);
 			}
 			else
 			{
