@@ -11,7 +11,7 @@ namespace AVLTree
 		}
 
 		public TValue Value { get; }
-		public int Level { get; }
+		public int Level { get; internal set; }
 
 		public override string ToString()
 		{

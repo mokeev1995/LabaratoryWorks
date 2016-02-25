@@ -4,17 +4,16 @@ using System.Collections.Generic;
 
 namespace AVLTree
 {
-	public class SubTree<TValue> : IEnumerable<Node<TValue>> where TValue : IComparable
+	public class SubTree<TValue> : IEnumerable<Node<TValue>>
+		where TValue : IComparable
 	{
 		public SubTree(Node<TValue> node, SubTree<TValue> parentSubTree)
 		{
 			Data = node;
-			_parentSubTree = parentSubTree;
+			ParentSubTree = parentSubTree;
 		}
 
 		public Node<TValue> Data { get; }
-
-		private readonly SubTree<TValue> _parentSubTree;
 
 		public int Height
 		{
@@ -65,7 +64,38 @@ namespace AVLTree
 		private SubTree<TValue> LeftSubtree { get; set; }
 		private SubTree<TValue> RightSubtree { get; set; }
 
-		public void Add(TValue value)
+		public SubTree<TValue> ParentSubTree { get; private set; }
+
+		public IEnumerator<Node<TValue>> GetEnumerator()
+		{
+			yield return Data;
+			
+			if (LeftSubtree == null && RightSubtree == null)
+				yield break;
+
+			if (LeftSubtree != null)
+			{
+				foreach (var value in LeftSubtree)
+				{
+					yield return value;
+				}
+			}
+
+			if (RightSubtree != null)
+			{
+				foreach (var value in RightSubtree)
+				{
+					yield return value;
+				}
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		public SubTree<TValue> Add(TValue value)
 		{
 			var current = this;
 			var level = 1;
@@ -81,8 +111,7 @@ namespace AVLTree
 					if (current.LeftSubtree == null)
 					{
 						current.LeftSubtree = new SubTree<TValue>(new Node<TValue>(value, level), current);
-						BalanceAfterAdd(current);
-						return;
+						return current.LeftSubtree;
 					}
 
 					current = current.LeftSubtree;
@@ -92,8 +121,7 @@ namespace AVLTree
 					if (current.RightSubtree == null)
 					{
 						current.RightSubtree = new SubTree<TValue>(new Node<TValue>(value, level), current);
-						BalanceAfterAdd(current);
-						return;
+						return current.RightSubtree;
 					}
 
 					current = current.RightSubtree;
@@ -103,25 +131,92 @@ namespace AVLTree
 			}
 		}
 
-		private static void BalanceAfterAdd(SubTree<TValue> tree)
+		public static SubTree<T> Balance<T>(SubTree<T> tree) 
+			where T : IComparable
 		{
-			var br = "--------------------------------------------------------------------------------------------------------------------------------";
-			Console.WriteLine(br);
-			var current = tree;
-			while (current != null)
+			var treeBalanceFactor = CalculateBalanceFactor(tree);
+
+			if (treeBalanceFactor == -2)
 			{
-				Console.WriteLine($"|\tValue: {current.Data.Value}\t" +
-				                  $"|\tLevel: {current.Data.Level}\t" +
-				                  $"|\tCurrent Height: {current.Height}\t" +
-				                  $"|\tLeft Height: {current.LeftHeight}\t" +
-				                  $"|\tRight Height: {current.RightHeight}");
-				if (Math.Abs(current.LeftHeight - current.RightHeight) > 1)
-				{
-					Console.WriteLine(br);
-					Console.WriteLine("Need balance!");
-				}
-				current = current._parentSubTree;
+				if (CalculateBalanceFactor(tree.RightSubtree) > 0)
+					tree.RightSubtree = SmallRightRotate(tree.RightSubtree, tree.ParentSubTree);
+				return SmallLeftRotate(tree, tree.ParentSubTree);
 			}
+
+			if (treeBalanceFactor == 2)
+			{
+				if (CalculateBalanceFactor(tree.LeftSubtree) < 0)
+					tree.LeftSubtree = SmallLeftRotate(tree.LeftSubtree, tree.ParentSubTree);
+				return SmallRightRotate(tree, tree.ParentSubTree);
+			}
+
+			return tree;
+		}
+
+		internal static int CalculateBalanceFactor<T>(SubTree<T> tree) 
+			where T : IComparable
+		{
+			return tree.LeftHeight - tree.RightHeight;
+		}
+
+		private static SubTree<T> SmallLeftRotate<T>(SubTree<T> subTree, SubTree<T> parent)
+			where T : IComparable
+		{
+			var pnt = subTree.ParentSubTree;
+
+			var st = subTree.RightSubtree;
+			var lvl = subTree.Data.Level;
+
+			foreach (var node in st)
+			{
+				node.Level--;
+			}
+
+			subTree.RightSubtree = null;
+			foreach (var node in subTree)
+			{
+				node.Level++;
+			}
+
+			subTree.RightSubtree = st.LeftSubtree;
+			subTree.ParentSubTree = st;
+
+			st.LeftSubtree = subTree;
+			st.ParentSubTree = parent;
+			st.LeftSubtree = pnt;
+			st.Data.Level = lvl;
+
+			return st;
+		}
+
+		private static SubTree<T> SmallRightRotate<T>(SubTree<T> subTree, SubTree<T> parent) 
+			where T : IComparable
+		{
+			var pnt = subTree.ParentSubTree;
+
+			var st = subTree.LeftSubtree;
+			var lvl = subTree.Data.Level;
+
+			foreach (var node in st)
+			{
+				node.Level--;
+			}
+
+			subTree.LeftSubtree = null;
+			foreach (var node in subTree)
+			{
+				node.Level++;
+			}
+
+			subTree.LeftSubtree = st.RightSubtree;
+			subTree.ParentSubTree = st;
+
+			st.ParentSubTree = parent;
+			st.RightSubtree = subTree;
+			st.LeftSubtree = pnt;
+			st.Data.Level = lvl;
+
+			return st;
 		}
 
 		public bool Contains(TValue item)
@@ -147,39 +242,6 @@ namespace AVLTree
 			}
 
 			return false;
-		}
-
-		public IEnumerator<Node<TValue>> GetEnumerator()
-		{
-			// first of all return current value
-			yield return Data;
-
-			// save all nodes we checking for subtrees in near future
-			var subtrees = new Queue<SubTree<TValue>>();
-
-			if (LeftSubtree == null && RightSubtree == null)
-				yield break;
-
-			if (LeftSubtree != null)
-			{
-				foreach (var value in LeftSubtree)
-				{
-					yield return value;
-				}
-			}
-
-			if (RightSubtree != null)
-			{
-				foreach (var value in RightSubtree)
-				{
-					yield return value;
-				}
-			}
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
 		}
 
 		public override string ToString()

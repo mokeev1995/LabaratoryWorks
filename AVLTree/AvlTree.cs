@@ -53,9 +53,28 @@ namespace AVLTree
 			}
 			else
 			{
-				_rootTree.Add(item);
+				var itm = _rootTree.Add(item);
+				_rootTree = BalanceAfterAdd(itm);
 			}
 			Count++;
+		}
+
+		private static SubTree<TValue> BalanceAfterAdd(SubTree<TValue> tree)
+		{
+			var current = tree;
+			while (true)
+			{
+				var balanceFactor = SubTree<TValue>.CalculateBalanceFactor(current);
+				if (Math.Abs(balanceFactor) > 1)
+				{
+					current = SubTree<TValue>.Balance(current);
+				}
+
+				if (current.ParentSubTree != null)
+					current = current.ParentSubTree;
+				else
+					return current;
+			}
 		}
 
 		public bool Remove(Node<TValue> item)
@@ -85,12 +104,28 @@ namespace AVLTree
 
 		public void CopyTo(Node<TValue>[] array, int arrayIndex)
 		{
-			throw new NotImplementedException();
+			if(array.Length < Count)
+				throw new ArgumentOutOfRangeException(nameof(array), "Wrong array dimension");
+
+			var i = 0;
+			foreach (var val in this)
+			{
+				array[i] = val;
+				i++;
+			}
 		}
 
 		public void CopyTo(TValue[] array, int arrayIndex)
 		{
-			throw new NotImplementedException();
+			if (array.Length < Count)
+				throw new ArgumentOutOfRangeException(nameof(array), "Wrong array dimension");
+
+			var i = 0;
+			foreach (var val in this)
+			{
+				array[i] = val.Value;
+				i++;
+			}
 		}
 
 		public IEnumerator<Node<TValue>> GetEnumerator()
