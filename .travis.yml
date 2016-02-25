@@ -1,6 +1,0 @@
-language: csharp
-solution: LaboratoryWorks.sln
-install:
-  - nuget restore LaboratoryWorks.sln
-mono:
-  - latest
