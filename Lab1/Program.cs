@@ -15,25 +15,22 @@ namespace Lab1
 
 			var words = GetWords(name);
 
-			IFrequencyCounter list = new TimeWatcher(new DictFreq());
-			var res = list.GetCount(words);
-			PrintResults(res);
-			((IDisposable) list).Dispose();
+		    var types = new IFrequencyCounter[]
+		    {
+		        new DictFreq(),
+		        new SortedDictFreq(),
+		        new SortedListFreq(),
+		        new ListFreq()
+		    };
 
-			list = new TimeWatcher(new SortedDictFreq());
-			res = list.GetCount(words);
-			PrintResults(res);
-			((IDisposable) list).Dispose();
-
-			list = new TimeWatcher(new SortedListFreq());
-			res = list.GetCount(words);
-			PrintResults(res);
-			((IDisposable)list).Dispose();
-
-			list = new TimeWatcher(new ListFreq());
-			res = list.GetCount(words);
-			PrintResults(res);
-			((IDisposable) list).Dispose();
+		    foreach (var type in types)
+		    {
+		        using (var timer = new TimeWatcher(type))
+		        {
+		            var res = timer.GetCount(words);
+		            PrintResults(res);
+		        }
+		    }
 
 			Console.ReadKey();
 		}
