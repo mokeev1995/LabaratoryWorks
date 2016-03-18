@@ -10,13 +10,13 @@ namespace Lab1Lib
 			var uniqueWords = new SortedList<string, int>();
 			foreach (var word in words)
 			{
-				if (uniqueWords.ContainsKey(word.ToLower()))
+				if (uniqueWords.ContainsKey(word))
 				{
-					uniqueWords[word.ToLower()]++;
+					uniqueWords[word]++;
 				}
 				else
 				{
-					uniqueWords.Add(word.ToLower(), 1);
+					uniqueWords.Add(word, 1);
 				}
 			}
 
