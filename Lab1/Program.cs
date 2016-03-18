@@ -15,22 +15,22 @@ namespace Lab1
 
 			var words = GetWords(name);
 
-		    var types = new IFrequencyCounter[]
-		    {
-		        new DictFreq(),
-		        new SortedDictFreq(),
-		        new SortedListFreq(),
-		        new ListFreq()
-		    };
+			var types = new IFrequencyCounter[]
+			{
+				new DictFreq(),
+				new SortedDictFreq(),
+				new SortedListFreq(),
+				new ListFreq()
+			};
 
-		    foreach (var type in types)
-		    {
-		        using (var timer = new TimeWatcher(type))
-		        {
-		            var res = timer.GetCount(words);
-		            PrintResults(res);
-		        }
-		    }
+			foreach (var type in types)
+			{
+				using (var timer = new TimeWatcher(type))
+				{
+					var res = timer.GetCount(words);
+					PrintResults(res);
+				}
+			}
 
 			Console.ReadKey();
 		}
