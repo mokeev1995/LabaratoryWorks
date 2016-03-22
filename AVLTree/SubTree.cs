@@ -136,18 +136,16 @@ namespace AVLTree
 		{
 			var treeBalanceFactor = CalculateBalanceFactor(tree);
 
-			if (treeBalanceFactor == -2)
+			switch (treeBalanceFactor)
 			{
-				if (CalculateBalanceFactor(tree.RightSubtree) > 0)
-					tree.RightSubtree = SmallRightRotate(tree.RightSubtree, tree.ParentSubTree);
-				return SmallLeftRotate(tree, tree.ParentSubTree);
-			}
-
-			if (treeBalanceFactor == 2)
-			{
-				if (CalculateBalanceFactor(tree.LeftSubtree) < 0)
-					tree.LeftSubtree = SmallLeftRotate(tree.LeftSubtree, tree.ParentSubTree);
-				return SmallRightRotate(tree, tree.ParentSubTree);
+				case -2:
+					return CalculateBalanceFactor(tree.RightSubtree) > 0 
+						? BigLeftRotate(tree, tree.ParentSubTree) 
+						: SmallLeftRotate(tree, tree.ParentSubTree);
+				case 2:
+					return CalculateBalanceFactor(tree.LeftSubtree) < 0 
+						? BigRightRotate(tree.LeftSubtree, tree.ParentSubTree) 
+						: SmallRightRotate(tree, tree.ParentSubTree);
 			}
 
 			return tree;
@@ -222,15 +220,15 @@ namespace AVLTree
 		private static SubTree<T> BigRightRotate<T>(SubTree<T> subTree, SubTree<T> parent)
 			where T : IComparable
 		{
-			//http://neerc.ifmo.ru/wiki/index.php?title=%D0%90%D0%92%D0%9B-%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE
-			//https://ru.wikipedia.org/wiki/%D0%90%D0%92%D0%9B-%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE
-			//https://ru.wikipedia.org/wiki/%D0%94%D0%B2%D0%BE%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE_%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0
+			subTree.LeftSubtree = SmallLeftRotate(subTree.LeftSubtree, subTree);
+			return SmallRightRotate(subTree, parent);
 		}
 
 		private static SubTree<T> BigLeftRotate<T>(SubTree<T> subTree, SubTree<T> parent)
 			where T : IComparable
 		{
-			
+			subTree.RightSubtree = SmallRightRotate(subTree.RightSubtree, subTree);
+			return  SmallLeftRotate(subTree, parent);
 		}
 
 
