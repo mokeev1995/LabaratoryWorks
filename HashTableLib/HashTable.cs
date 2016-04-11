@@ -93,14 +93,11 @@ namespace HashTableLib
 				if (_data[position].NextNode != null)
 				{
 					_data[position] = _data[position].NextNode;
-					if (_data[position] == null)
-					{
-						_hashes.Remove(keyHash);
-					}
 				}
 				else
 				{
-					
+					_data.Remove(_data[position]);
+					_hashes.Remove(keyHash);
 				}
 
 			}
