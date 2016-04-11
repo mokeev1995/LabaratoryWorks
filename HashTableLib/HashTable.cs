@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace HashTableLib
 {
@@ -8,7 +11,7 @@ namespace HashTableLib
 	/// </summary>
 	/// <typeparam name="TKey">Comparable Key</typeparam>
 	/// <typeparam name="TValue">Any Value to store</typeparam>
-	public class HashTable<TKey, TValue> where TKey : IComparable
+	public class HashTable<TKey, TValue>: IEnumerable<KeyValuePair<TKey, TValue>> where TKey : IComparable
 	{
 		private readonly List<TableNode<TKey, TValue>> _data;
 
@@ -29,6 +32,7 @@ namespace HashTableLib
 		/// <param name="key"></param>
 		/// <returns>Value for key</returns>
 		/// <exception cref="ArgumentException" accessor="get">Key doesn't exists in hash table</exception>
+		/// <exception cref="ArgumentException" accessor="set">Key doesn't exists in hash table</exception>
 		public TValue this[TKey key]
 		{
 			get
@@ -38,7 +42,17 @@ namespace HashTableLib
 					throw new ArgumentException("Key doesn't exists in hash table");
 
 				var position = _hashes.FindIndex(hashItem => hash.CompareTo(hashItem) == 0);
+				
 				return _data[position].GetValue(key);
+			}
+			set
+			{
+				var hash = key.GetHashCode();
+				if (!_hashes.Contains(hash))
+					throw new ArgumentException("Key doesn't exists in hash table");
+
+				var position = _hashes.FindIndex(hashItem => hash.CompareTo(hashItem) == 0);
+				_data[position].SetValue(key,value);
 			}
 		}
 		
@@ -108,9 +122,30 @@ namespace HashTableLib
 
 			Count--;
 		}
+
+		public bool ContainsKey(TKey key)
+		{
+			var hash = key.GetHashCode();
+
+			if (!_hashes.Contains(hash))
+				return false;
+
+			var position = _hashes.FindIndex(hashItem => hash.CompareTo(hashItem) == 0);
+			return _data[position].ContainsKey(key);
+		}
+
+		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+		{
+			return _data.SelectMany(item => item).GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
 	}
 
-	internal class TableNode<TKey, TValue> where TKey : IComparable
+	internal class TableNode<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> where TKey : IComparable
 	{
 		public TableNode(TKey key, TValue value)
 		{
@@ -119,13 +154,28 @@ namespace HashTableLib
 		}
 
 		public TKey Key { get; }
-		private TValue Value { get; }
+		private TValue Value { get; set; }
 
 		public TableNode<TKey, TValue> NextNode { get; private set; }
+
+		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+		{
+			var current = this;
+			do
+			{
+				yield return new KeyValuePair<TKey, TValue>(current.Key, current.Value);
+				current = current.NextNode;
+			} while (current != null);
+		}
 
 		public override int GetHashCode()
 		{
 			return Key.GetHashCode();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 
 		public void Add(TableNode<TKey, TValue> node)
@@ -168,6 +218,33 @@ namespace HashTableLib
 				throw new ArgumentOutOfRangeException(nameof(key));
 
 			return NextNode.GetValue(key);
+		}
+
+		public void SetValue(TKey key, TValue value)
+		{
+			if (Key.CompareTo(key) == 0)
+			{
+				Value = value;
+				return;
+			}
+
+			if (NextNode == null)
+				throw new ArgumentOutOfRangeException(nameof(key));
+
+			NextNode.SetValue(key, value);
+		}
+
+		public bool ContainsKey(TKey key)
+		{
+			var current = this;
+			do
+			{
+				if (current.Key.CompareTo(key) == 0)
+					return true;
+				current = current.NextNode;
+			} while (current != null);
+
+			return false;
 		}
 	}
 }
