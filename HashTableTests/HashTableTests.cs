@@ -34,7 +34,9 @@ namespace HashTableTests
 			_table.Add(7, "test123");
 			_table.Add(4, "test123");
 			_table.Add(1, "test123");
-			Assert.AreEqual(4, _table.Count);
+			_table.Add(-1, "test123");
+			_table.Add(-4, "test123");
+			Assert.AreEqual(6, _table.Count);
 		}
 
 		[TestMethod]

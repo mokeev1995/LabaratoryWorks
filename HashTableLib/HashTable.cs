@@ -2,32 +2,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace HashTableLib
 {
 	/// <summary>
-	/// Generic Hash Table
+	///     Generic Hash Table
 	/// </summary>
 	/// <typeparam name="TKey">Comparable Key</typeparam>
 	/// <typeparam name="TValue">Any Value to store</typeparam>
-	public class HashTable<TKey, TValue>: IEnumerable<KeyValuePair<TKey, TValue>> where TKey : IComparable
+	public class HashTable<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> where TKey : IComparable
 	{
-		private readonly List<TableNode<TKey, TValue>> _data;
+		private TableNode<TKey, TValue>[] _data;
+		private int _capacity;
 
-		private readonly List<int> _hashes;
 
 		/// <summary>
-		/// Hash Table collection
+		///     Hash Table collection
 		/// </summary>
-		public HashTable()
+		public HashTable(int capacity = 4)
 		{
-			_hashes = new List<int>();
-			_data = new List<TableNode<TKey, TValue>>();
+			_capacity = capacity;
+			_data = new TableNode<TKey, TValue>[capacity];
 		}
 
 		/// <summary>
-		/// Iterator for HashTable
+		///     Iterator for HashTable
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns>Value for key</returns>
@@ -38,101 +37,27 @@ namespace HashTableLib
 			get
 			{
 				var hash = key.GetHashCode();
-				if(!_hashes.Contains(hash))
+				var item = FirstOrDefault(node => node.Hash == hash);
+				if (item == null)
 					throw new ArgumentException("Key doesn't exists in hash table");
 
-				var position = _hashes.FindIndex(hashItem => hash.CompareTo(hashItem) == 0);
-				
-				return _data[position].GetValue(key);
+				return item.GetValue(key);
 			}
 			set
 			{
 				var hash = key.GetHashCode();
-				if (!_hashes.Contains(hash))
+				var item = FirstOrDefault(node => node.Hash == hash);
+				if (item == null)
 					throw new ArgumentException("Key doesn't exists in hash table");
 
-				var position = _hashes.FindIndex(hashItem => hash.CompareTo(hashItem) == 0);
-				_data[position].SetValue(key,value);
+				item.SetValue(key, value);
 			}
 		}
-		
+
 		/// <summary>
-		/// Count of elements in hash table
+		///     Count of elements in hash table
 		/// </summary>
 		public int Count { get; private set; }
-
-		/// <summary>
-		/// Add item
-		/// </summary>
-		/// <param name="key"></param>
-		/// <param name="value"></param>
-		/// <exception cref="ArgumentNullException">hash is null.</exception>
-		/// <exception cref="ArgumentOutOfRangeException">index is less than 0.Or index is equal to or greater than <see cref="P:System.Collections.Generic.List`1.Count" />. </exception>
-		public void Add(TKey key, TValue value)
-		{
-			var node = new TableNode<TKey, TValue>(key, value);
-			var hash = node.GetHashCode();
-
-			if (_hashes.Contains(hash))
-			{
-				var position = _hashes.FindIndex(hashItem => hashItem == hash);
-				_data[position].Add(node);
-
-				return;
-			}
-
-			_hashes.Add(hash);
-			_data.Add(node);
-			Count++;
-		}
-
-		/// <summary>
-		/// Removes item
-		/// </summary>
-		/// <param name="key"></param>
-		/// <exception cref="ArgumentException">Key <param name="key"></param> doesn't exists in hash table.</exception>
-		/// <exception cref="ArgumentOutOfRangeException">index is less than 0.Or index is equal to or greater than <see cref="P:System.Collections.Generic.List`1.Count" />. </exception>
-		/// <exception cref="ArgumentNullException">match is null.</exception>
-		public void Remove(TKey key)
-		{
-			var keyHash = key.GetHashCode();
-
-			if (!_hashes.Contains(keyHash))
-				throw new ArgumentException("Key doesn't exists in hash table.");
-
-			var position = _hashes.FindIndex(hash => keyHash == hash);
-
-			if (_data[position].Key.CompareTo(key) == 0)
-			{
-				if (_data[position].NextNode != null)
-				{
-					_data[position] = _data[position].NextNode;
-				}
-				else
-				{
-					_data.Remove(_data[position]);
-					_hashes.Remove(keyHash);
-				}
-
-			}
-			else
-			{
-				_data[position].Remove(key);
-			}
-
-			Count--;
-		}
-
-		public bool ContainsKey(TKey key)
-		{
-			var hash = key.GetHashCode();
-
-			if (!_hashes.Contains(hash))
-				return false;
-
-			var position = _hashes.FindIndex(hashItem => hash.CompareTo(hashItem) == 0);
-			return _data[position].ContainsKey(key);
-		}
 
 		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
 		{
@@ -143,6 +68,134 @@ namespace HashTableLib
 		{
 			return GetEnumerator();
 		}
+
+		/// <summary>
+		///     Add item
+		/// </summary>
+		/// <param name="key"></param>
+		/// <param name="value"></param>
+		/// <exception cref="ArgumentNullException">hash is null.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">
+		///     index is less than 0.Or index is equal to or greater than
+		///     <see cref="P:System.Collections.Generic.List`1.Count" />.
+		/// </exception>
+		public void Add(TKey key, TValue value)
+		{
+			var node = new TableNode<TKey, TValue>(key, value);
+			var hash = node.GetHashCode();
+			var item = FirstOrDefault(nodeItem => nodeItem.Hash == hash);
+			if (item != null)
+			{
+				item.Add(node);
+				return;
+			}
+
+			AddToArray(node);
+			Count++;
+		}
+
+		private TableNode<TKey, TValue> FirstOrDefault(Func<TableNode<TKey, TValue>, bool> predicate)
+		{
+			for (int i = 0; i < Count; i++)
+			{
+				if (predicate(_data[i]))
+					return _data[i];
+			}
+
+			return null;
+		}
+
+		private void AddToArray(TableNode<TKey, TValue> node)
+		{
+			while (true)
+			{
+				if (Count < _capacity)
+				{
+					_data[Count] = node;
+				}
+				else
+				{
+					_capacity *= 2;
+					var tmpData = new TableNode<TKey, TValue>[_capacity];
+					Array.Copy(_data, tmpData, _data.Length);
+					_data = tmpData;
+					continue;
+				}
+				break;
+			}
+		}
+
+		private void RemoveFromArray(TableNode<TKey, TValue> node)
+		{
+			var found = false;
+
+			for (var i = 0; i < Count; i++)
+			{
+				if (!found)
+				{
+					if (node.Key.CompareTo(_data[i].Key) == 0)
+					{
+						found = true;
+						_data[i] = i + 1 < _data.Length ? _data[i + 1] : null;
+					}
+				}
+				else
+				{
+					_data[i] = i + 1 < _data.Length ? _data[i + 1] : null;
+				}
+			}
+		}
+
+		/// <summary>
+		///     Removes item
+		/// </summary>
+		/// <param name="key"></param>
+		/// <exception cref="ArgumentException">
+		///     Key
+		///     <param name="key"></param>
+		///     doesn't exists in hash table.
+		/// </exception>
+		/// <exception cref="ArgumentOutOfRangeException">
+		///     index is less than 0.Or index is equal to or greater than
+		///     <see cref="P:System.Collections.Generic.List`1.Count" />.
+		/// </exception>
+		/// <exception cref="ArgumentNullException">match is null.</exception>
+		public void Remove(TKey key)
+		{
+			var keyHash = key.GetHashCode();
+
+			var item = FirstOrDefault(nodeItem => nodeItem.Hash == keyHash);
+			if (item == null)
+				throw new ArgumentException("Key doesn't exists in hash table.");
+
+			if (item.Key.CompareTo(key) == 0)
+			{
+
+				if (item.NextNode != null)
+				{
+					RemoveFromArray(item);
+					AddToArray(item.NextNode);
+				}
+				else
+				{
+					RemoveFromArray(item);
+				}
+			}
+			else
+			{
+				item.Remove(key);
+			}
+
+			Count--;
+		}
+
+		public bool ContainsKey(TKey key)
+		{
+			var hash = key.GetHashCode();
+			var item = FirstOrDefault(nodeItem => nodeItem.Hash == hash);
+
+			return item != null && item.ContainsKey(key);
+		}
 	}
 
 	internal class TableNode<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> where TKey : IComparable
@@ -151,7 +204,10 @@ namespace HashTableLib
 		{
 			Key = key;
 			Value = value;
+			Hash = key.GetHashCode();
 		}
+
+		public int Hash { get; }
 
 		public TKey Key { get; }
 		private TValue Value { get; set; }
@@ -168,14 +224,14 @@ namespace HashTableLib
 			} while (current != null);
 		}
 
-		public override int GetHashCode()
-		{
-			return Key.GetHashCode();
-		}
-
 		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
+		}
+
+		public override int GetHashCode()
+		{
+			return Key.GetHashCode();
 		}
 
 		public void Add(TableNode<TKey, TValue> node)
@@ -189,7 +245,10 @@ namespace HashTableLib
 		/// <summary>
 		/// </summary>
 		/// <param name="key"></param>
-		/// <exception cref="ArgumentOutOfRangeException">if <param name="key">key</param> doestn't exists in node.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">if
+		///     <param name="key">key</param>
+		///     doestn't exists in node.
+		/// </exception>
 		/// <exception cref="ArgumentException"><paramref name="key" /> is not the same type as this instance. </exception>
 		public void Remove(TKey key)
 		{
@@ -203,7 +262,7 @@ namespace HashTableLib
 		}
 
 		/// <summary>
-		/// Returns value for key
+		///     Returns value for key
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
