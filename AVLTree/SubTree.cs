@@ -69,7 +69,7 @@ namespace AVLTree
 		public IEnumerator<Node<TValue>> GetEnumerator()
 		{
 			yield return Data;
-			
+
 			if (LeftSubtree == null && RightSubtree == null)
 				yield break;
 
@@ -131,7 +131,7 @@ namespace AVLTree
 			}
 		}
 
-		public static SubTree<T> Balance<T>(SubTree<T> tree) 
+		public static SubTree<T> Balance<T>(SubTree<T> tree)
 			where T : IComparable
 		{
 			var treeBalanceFactor = CalculateBalanceFactor(tree);
@@ -139,19 +139,19 @@ namespace AVLTree
 			switch (treeBalanceFactor)
 			{
 				case -2:
-					return CalculateBalanceFactor(tree.RightSubtree) > 0 
-						? BigLeftRotate(tree, tree.ParentSubTree) 
+					return CalculateBalanceFactor(tree.RightSubtree) > 0
+						? BigLeftRotate(tree, tree.ParentSubTree)
 						: SmallLeftRotate(tree, tree.ParentSubTree);
 				case 2:
-					return CalculateBalanceFactor(tree.LeftSubtree) < 0 
-						? BigRightRotate(tree.LeftSubtree, tree.ParentSubTree) 
+					return CalculateBalanceFactor(tree.LeftSubtree) < 0
+						? BigRightRotate(tree.LeftSubtree, tree.ParentSubTree)
 						: SmallRightRotate(tree, tree.ParentSubTree);
 			}
 
 			return tree;
 		}
 
-		internal static int CalculateBalanceFactor<T>(SubTree<T> tree) 
+		internal static int CalculateBalanceFactor<T>(SubTree<T> tree)
 			where T : IComparable
 		{
 			return tree.LeftHeight - tree.RightHeight;
@@ -187,7 +187,7 @@ namespace AVLTree
 			return st;
 		}
 
-		private static SubTree<T> SmallRightRotate<T>(SubTree<T> subTree, SubTree<T> parent) 
+		private static SubTree<T> SmallRightRotate<T>(SubTree<T> subTree, SubTree<T> parent)
 			where T : IComparable
 		{
 			var pnt = subTree.ParentSubTree;
@@ -228,7 +228,7 @@ namespace AVLTree
 			where T : IComparable
 		{
 			subTree.RightSubtree = SmallRightRotate(subTree.RightSubtree, subTree);
-			return  SmallLeftRotate(subTree, parent);
+			return SmallLeftRotate(subTree, parent);
 		}
 
 
