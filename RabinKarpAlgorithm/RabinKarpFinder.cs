@@ -6,7 +6,7 @@ namespace RabinKarpAlgorithm
 {
 	public class RabinKarpFinder : SubstringFinder
 	{
-		public override IEnumerable<int> Find(string where, string what)
+		public override IEnumerable<int> Find(string what)
 		{
 			throw new NotImplementedException();
 		}

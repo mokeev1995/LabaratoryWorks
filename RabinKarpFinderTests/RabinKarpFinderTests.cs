@@ -1,19 +1,18 @@
 ﻿using System.Linq;
-using KnuthMorrisPrattAlgorithm;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RabinKarpAlgorithm;
 
-namespace KnuthMorrisPrattFinderTests
+namespace RabinKarpFinderTests
 {
 	[TestClass]
-	public class KnuthMorrisPrattFinderTests
+	public class RabinKarpFinderTests
 	{
-
-		private KnuthMorrisPrattFinder _kmp;
+		private RabinKarpFinder _rk;
 
 		[TestInitialize]
 		public void Init()
 		{
-			_kmp = new KnuthMorrisPrattFinder();
+			_rk = new RabinKarpFinder();
 		}
 
 		[TestMethod]
@@ -22,8 +21,8 @@ namespace KnuthMorrisPrattFinderTests
 			const string what = "1232123213";
 			const string where = "123";
 
-			_kmp.SetSource(where);
-			var found = _kmp.Find(what);
+			_rk.SetSource(where);
+			var found = _rk.Find(what);
 			Assert.AreEqual(found.Count(), 0);
 		}
 
@@ -33,8 +32,8 @@ namespace KnuthMorrisPrattFinderTests
 			const string what = "123";
 			const string where = "1232123213";
 
-			_kmp.SetSource(where);
-			var found = _kmp.Find(what).ToArray();
+			_rk.SetSource(where);
+			var found = _rk.Find(what).ToArray();
 
 			Assert.AreEqual(found.Length, 2);
 			Assert.AreEqual(0, found[0]);
@@ -47,8 +46,8 @@ namespace KnuthMorrisPrattFinderTests
 			const string what = "213";
 			const string where = "1232123213";
 
-			_kmp.SetSource(where);
-			var found = _kmp.Find(what).ToArray();
+			_rk.SetSource(where);
+			var found = _rk.Find(what).ToArray();
 
 			Assert.AreEqual(found.Length, 1);
 			Assert.AreEqual(7, found[0]);
@@ -60,8 +59,8 @@ namespace KnuthMorrisPrattFinderTests
 			const string what = "123456";
 			const string where = "1232123213";
 
-			_kmp.SetSource(where);
-			var found = _kmp.Find(what).ToArray();
+			_rk.SetSource(where);
+			var found = _rk.Find(what).ToArray();
 
 			Assert.AreEqual(found.Length, 0);
 		}
