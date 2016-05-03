@@ -2,7 +2,7 @@ using System;
 
 namespace AVLTree
 {
-	public class Node<TValue>  where TValue : IComparable
+	public class Node<TValue> where TValue : IComparable
 	{
 		public Node(TValue value, int level)
 		{

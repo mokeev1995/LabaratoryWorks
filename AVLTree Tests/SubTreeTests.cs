@@ -12,7 +12,7 @@ namespace AVLTree_Tests
 		[TestInitialize]
 		public void Init()
 		{
-			_subTree = new SubTree<int>(new Node<int>(5,0), null);
+			_subTree = new SubTree<int>(new Node<int>(5, 0), null);
 		}
 
 		[TestMethod]
@@ -134,6 +134,5 @@ namespace AVLTree_Tests
 			_subTree.Add(-1);
 			Assert.AreEqual(3, _subTree.Height);
 		}
-
 	}
 }

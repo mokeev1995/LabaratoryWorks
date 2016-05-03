@@ -5,18 +5,6 @@ namespace Lab1Lib
 {
 	public class ListFreq : IFrequencyCounter
 	{
-		private class WordCountPair<TKey, TValue>
-		{
-			public TKey Word { get; }
-			public TValue Count { get; set; }
-
-			public WordCountPair(TKey word, TValue count)
-			{
-				Word = word;
-				Count = count;
-			}
-		}
-
 		public FreqResult GetCount(IEnumerable<string> words)
 		{
 			var uniqueWords = new List<WordCountPair<string, int>>();
@@ -37,6 +25,18 @@ namespace Lab1Lib
 
 			return new FreqResult(uniqueWords.Count,
 				uniqueWords.Select(uw => new KeyValuePair<string, int>(uw.Word, uw.Count)).Take(10));
+		}
+
+		private class WordCountPair<TKey, TValue>
+		{
+			public WordCountPair(TKey word, TValue count)
+			{
+				Word = word;
+				Count = count;
+			}
+
+			public TKey Word { get; }
+			public TValue Count { get; set; }
 		}
 	}
 }

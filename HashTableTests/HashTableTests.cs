@@ -52,7 +52,6 @@ namespace HashTableTests
 			Assert.AreEqual("test123", _table[1]);
 			Assert.AreEqual("test123", _table[-1]);
 			Assert.AreEqual("test123", _table[-4]);
-
 		}
 
 		[TestMethod]
@@ -205,24 +204,24 @@ namespace HashTableTests
 
 	internal class TestEq : IComparable
 	{
-		public string TestStr { get; set; }
-		private int Hash { get; }
-
 		public TestEq(string testStr, int hash)
 		{
 			TestStr = testStr;
 			Hash = hash;
 		}
 
-		public override int GetHashCode()
-		{
-			return Hash;
-		}
+		public string TestStr { get; set; }
+		private int Hash { get; }
 
 		public int CompareTo(object obj)
 		{
 			var other = (TestEq) obj;
 			return string.Compare(TestStr, other.TestStr, StringComparison.Ordinal);
+		}
+
+		public override int GetHashCode()
+		{
+			return Hash;
 		}
 
 		public override string ToString()

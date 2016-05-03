@@ -44,7 +44,7 @@ namespace HashTableProgram
 				while ((line = sr.ReadLine()) != null)
 				{
 					line = new string(line.Where(sym => char.IsLetter(sym) || char.IsWhiteSpace(sym)).ToArray()).ToLower();
-					var splitedLine = line.Split(new[] { ' ' },
+					var splitedLine = line.Split(new[] {' '},
 						StringSplitOptions.RemoveEmptyEntries);
 					words.AddRange(splitedLine);
 				}

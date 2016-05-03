@@ -13,10 +13,6 @@ namespace AVLTree
 			Count = 0;
 		}
 
-		public int Count { get; private set; }
-
-		public bool IsReadOnly => false;
-
 		public Node<TValue> this[int index]
 		{
 			get
@@ -40,9 +36,51 @@ namespace AVLTree
 			}
 		}
 
+		public int Count { get; private set; }
+
+		public bool IsReadOnly => false;
+
 		public void Add(Node<TValue> item)
 		{
 			Add(item.Value);
+		}
+
+		public bool Remove(Node<TValue> item)
+		{
+			return Remove(item.Value);
+		}
+
+		public void Clear()
+		{
+			_rootTree = null;
+		}
+
+		public bool Contains(Node<TValue> item)
+		{
+			return _rootTree.Contains(item.Value);
+		}
+
+		public void CopyTo(Node<TValue>[] array, int arrayIndex)
+		{
+			if (array.Length < Count)
+				throw new ArgumentOutOfRangeException(nameof(array), "Wrong array dimension");
+
+			var i = 0;
+			foreach (var val in this)
+			{
+				array[i] = val;
+				i++;
+			}
+		}
+
+		public IEnumerator<Node<TValue>> GetEnumerator()
+		{
+			return _rootTree.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return ((IEnumerable) _rootTree).GetEnumerator();
 		}
 
 		public void Add(TValue item)
@@ -77,42 +115,14 @@ namespace AVLTree
 			}
 		}
 
-		public bool Remove(Node<TValue> item)
-		{
-			return Remove(item.Value);
-		}
-
 		public bool Remove(TValue item)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Clear()
-		{
-			_rootTree = null;
-		}
-
-		public bool Contains(Node<TValue> item)
-		{
-			return _rootTree.Contains(item.Value);
-		}
-
 		public bool Contains(TValue item)
 		{
 			return _rootTree.Contains(item);
-		}
-
-		public void CopyTo(Node<TValue>[] array, int arrayIndex)
-		{
-			if(array.Length < Count)
-				throw new ArgumentOutOfRangeException(nameof(array), "Wrong array dimension");
-
-			var i = 0;
-			foreach (var val in this)
-			{
-				array[i] = val;
-				i++;
-			}
 		}
 
 		public void CopyTo(TValue[] array, int arrayIndex)
@@ -126,16 +136,6 @@ namespace AVLTree
 				array[i] = val.Value;
 				i++;
 			}
-		}
-
-		public IEnumerator<Node<TValue>> GetEnumerator()
-		{
-			return _rootTree.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return ((IEnumerable) _rootTree).GetEnumerator();
 		}
 	}
 }

@@ -133,12 +133,13 @@ namespace Lab1Tests
 			Assert.AreEqual(expected.Count, data.Count);
 		}
 
-		private bool FirstEqual(IEnumerable<KeyValuePair<string, int>> firstItems, IEnumerable<KeyValuePair<string, int>> secondItems, int count)
+		private bool FirstEqual(IEnumerable<KeyValuePair<string, int>> firstItems,
+			IEnumerable<KeyValuePair<string, int>> secondItems, int count)
 		{
 			var firstData = firstItems.ToArray();
 			var secondData = secondItems.ToArray();
 
-			for (int i = 0; i < count; i++)
+			for (var i = 0; i < count; i++)
 			{
 				if (firstData[i].Key != secondData[i].Key)
 					return false;

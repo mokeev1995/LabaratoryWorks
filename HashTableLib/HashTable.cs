@@ -29,11 +29,30 @@ namespace HashTableLib
 			}
 			set
 			{
-				if(!ContainsKey(key))
+				if (!ContainsKey(key))
 					throw new KeyNotFoundException("Key doesn't exists in hash table");
 
 				_data[ComputeHash(key)].SetValue(key, value);
 			}
+		}
+
+		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+		{
+			foreach (var node in _data)
+			{
+				if (node == null)
+					continue;
+
+				foreach (var item in node)
+				{
+					yield return new KeyValuePair<TKey, TValue>(item.Key, item.Value);
+				}
+			}
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
 		}
 
 		private uint ComputeHash(TKey key)
@@ -67,7 +86,7 @@ namespace HashTableLib
 
 		public void Add(TKey key, TValue value)
 		{
-			if(ContainsKey(key))
+			if (ContainsKey(key))
 				throw new ArgumentException("This key already exists");
 
 			if (_capacity <= Count)
@@ -100,7 +119,7 @@ namespace HashTableLib
 
 			foreach (var node in _data)
 			{
-				if(node == null)
+				if (node == null)
 					continue;
 
 				foreach (var item in node)
@@ -138,25 +157,6 @@ namespace HashTableLib
 			}
 
 			Count--;
-		}
-
-		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-		{
-			foreach (var node in _data)
-			{
-				if(node == null)
-					continue;
-
-				foreach (var item in node)
-				{
-					yield return new KeyValuePair<TKey, TValue>(item.Key, item.Value);
-				}
-			}
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
 		}
 	}
 }
