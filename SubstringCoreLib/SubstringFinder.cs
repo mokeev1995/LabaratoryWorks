@@ -5,13 +5,15 @@ namespace SubstringCoreLib
 {
 	public abstract class SubstringFinder : ISubstringFinder
 	{
-		private string _source = string.Empty;
+		protected string SourceText = string.Empty;
 
 		public void SetSource(string source)
 		{
-			_source = source;
+			SourceText = source;
 		}
 
 		public abstract IEnumerable<int> Find(string what);
+
+		public abstract override string ToString();
 	}
 }

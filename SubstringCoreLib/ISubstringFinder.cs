@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SubstringCoreLib
 {
@@ -7,5 +8,7 @@ namespace SubstringCoreLib
 		void SetSource(string source);
 
 		IEnumerable<int> Find(string what);
+
+		string ToString();
 	}
 }

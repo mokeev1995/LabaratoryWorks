@@ -47,6 +47,7 @@
     <ProjectReference Include="..\SubstringCoreLib\SubstringCoreLib.csproj">
       <Project>{c9a4c88e-40f8-442d-935a-c9cea298fb79}</Project>
       <Name>SubstringCoreLib</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

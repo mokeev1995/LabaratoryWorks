@@ -12,18 +12,22 @@ namespace SubstringSearching
 		{
 			var algs = LibrariesManager.LoadAlgorithms();
 
-			var text = LoadText();
+			var sourceText = LoadText();
 
 			Console.Write("Что ищем? ");
-			var toFind = Console.ReadLine();
+			var textToFind = Console.ReadLine();
 
 			foreach (var substringFinder in algs)
 			{
-				substringFinder.SetSource(text);
-				var positions = (substringFinder.Find(toFind) ?? new int[0]).ToArray();
+				substringFinder.SetSource(sourceText);
 
-				Console.WriteLine($"Найдено {positions.Length} встреч.");
-				Console.WriteLine("Вывести? (Y/y/Д/д)");
+				var positions = (substringFinder.Find(textToFind) ?? new int[0]).ToArray();
+
+				Console.WriteLine($"Найдено {positions.Length} встреч. Способ: {substringFinder.ToString()}");
+
+				if (positions.Length <= 0) continue;
+
+				Console.WriteLine("Вывести? (Y/y/N/n)");
 				var decision = (Console.ReadLine() ?? "").ToLower();
 				if (decision == "y" || decision == "д")
 				{

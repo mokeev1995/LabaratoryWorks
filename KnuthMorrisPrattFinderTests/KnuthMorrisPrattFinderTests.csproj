@@ -50,8 +50,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="KnuthMorrisPrattFinderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KnuthMorrisPrattAlgorithm\KnuthMorrisPrattAlgorithm.csproj">
+      <Project>{ebbeb516-cc6c-45c9-96b5-804aad9e7c0d}</Project>
+      <Name>KnuthMorrisPrattAlgorithm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SubstringCoreLib\SubstringCoreLib.csproj">
+      <Project>{c9a4c88e-40f8-442d-935a-c9cea298fb79}</Project>
+      <Name>SubstringCoreLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

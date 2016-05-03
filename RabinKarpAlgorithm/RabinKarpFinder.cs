@@ -6,9 +6,14 @@ namespace RabinKarpAlgorithm
 {
 	public class RabinKarpFinder : SubstringFinder
 	{
-		public override IEnumerable<int> Find(string what)
+		public override IEnumerable<int> Find(string where, string what)
 		{
 			throw new NotImplementedException();
+		}
+
+		public override string ToString()
+		{
+			return "Алгоритм Рабина — Карпа";
 		}
 	}
 }

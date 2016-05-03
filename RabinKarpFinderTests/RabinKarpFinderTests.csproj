@@ -53,6 +53,16 @@
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RabinKarpAlgorithm\RabinKarpAlgorithm.csproj">
+      <Project>{20fff7c0-6eeb-473c-a44d-80513aab3497}</Project>
+      <Name>RabinKarpAlgorithm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SubstringCoreLib\SubstringCoreLib.csproj">
+      <Project>{c9a4c88e-40f8-442d-935a-c9cea298fb79}</Project>
+      <Name>SubstringCoreLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
