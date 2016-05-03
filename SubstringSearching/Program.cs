@@ -1,9 +1,15 @@
-﻿namespace SubstringSearching
+﻿using System;
+using SubstringCoreLib;
+
+namespace SubstringSearching
 {
-	internal class Program
+	internal static class Program
 	{
-		private static void Main(string[] args)
+		private static void Main()
 		{
+			var algs = LibrariesManager.LoadAlgorithms();
+
+			Console.ReadKey();
 		}
 	}
 }
