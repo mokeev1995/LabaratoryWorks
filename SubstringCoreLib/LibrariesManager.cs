@@ -23,8 +23,9 @@ namespace SubstringCoreLib
 			foreach (var file in dllFiles)
 			{
 				var asm = Assembly.LoadFrom(file);
-				var instances = asm.GetExportedTypes().Where(type => interfaceType.IsAssignableFrom(type)).Select(Activator.CreateInstance).Cast<ISubstringFinder>();
-				algs.AddRange(instances);
+				var instances = asm.GetExportedTypes().Where(type => interfaceType.IsAssignableFrom(type)).Select(Activator.CreateInstance).Cast<ISubstringFinder>().ToArray();
+				if(instances.Length > 0)
+					algs.AddRange(instances);
 			}
 			
 
