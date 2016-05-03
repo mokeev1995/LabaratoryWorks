@@ -4,10 +4,8 @@ namespace SubstringCoreLib
 {
 	public interface ISubstringFinder
 	{
-		string Source { get; }
+		void SetSource(string source);
 
-		void SetSource(string sourse);
-
-		IEnumerable<int> Find();
+		IEnumerable<int> Find(string what);
 	}
 }

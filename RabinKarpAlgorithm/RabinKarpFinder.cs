@@ -4,16 +4,9 @@ using SubstringCoreLib;
 
 namespace RabinKarpAlgorithm
 {
-	public class RabinKarpFinder : ISubstringFinder
+	public class RabinKarpFinder : SubstringFinder
 	{
-		public string Source { get; }
-
-		public void SetSource(string sourse)
-		{
-			throw new NotImplementedException();
-		}
-
-		public IEnumerable<int> Find()
+		public override IEnumerable<int> Find(string what)
 		{
 			throw new NotImplementedException();
 		}

@@ -4,16 +4,9 @@ using SubstringCoreLib;
 
 namespace KnuthMorrisPrattAlgorithm
 {
-	public class KnuthMorrisPrattFinder : ISubstringFinder
+	public class KnuthMorrisPrattFinder : SubstringFinder
 	{
-		public string Source { get; }
-
-		public void SetSource(string sourse)
-		{
-			throw new NotImplementedException();
-		}
-
-		public IEnumerable<int> Find()
+		public override IEnumerable<int> Find(string what)
 		{
 			throw new NotImplementedException();
 		}
