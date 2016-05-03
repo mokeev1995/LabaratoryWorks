@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SubstringCoreLib;
 
 namespace KnuthMorrisPrattAlgorithm
@@ -6,14 +7,15 @@ namespace KnuthMorrisPrattAlgorithm
 	public class KnuthMorrisPrattFinder : ISubstringFinder
 	{
 		public string Source { get; }
+
 		public void SetSource(string sourse)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 
 		public IEnumerable<int> Find()
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
 	}
 }

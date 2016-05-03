@@ -10,7 +10,7 @@ namespace SubstringCoreLib
 	{
 		public static string LibrariesDir => Path.Combine(Environment.CurrentDirectory, "Algorithms");
 
-		public static IEnumerable<ISubstringFinder> LoadAlgorithms()	
+		public static IEnumerable<ISubstringFinder> LoadAlgorithms()
 		{
 			var algs = new List<ISubstringFinder>();
 
@@ -23,11 +23,16 @@ namespace SubstringCoreLib
 			foreach (var file in dllFiles)
 			{
 				var asm = Assembly.LoadFrom(file);
-				var instances = asm.GetExportedTypes().Where(type => interfaceType.IsAssignableFrom(type)).Select(Activator.CreateInstance).Cast<ISubstringFinder>().ToArray();
-				if(instances.Length > 0)
+				var instances =
+					asm.GetExportedTypes()
+						.Where(type => interfaceType.IsAssignableFrom(type))
+						.Select(Activator.CreateInstance)
+						.Cast<ISubstringFinder>()
+						.ToArray();
+				if (instances.Length > 0)
 					algs.AddRange(instances);
 			}
-			
+
 
 			return algs;
 		}
