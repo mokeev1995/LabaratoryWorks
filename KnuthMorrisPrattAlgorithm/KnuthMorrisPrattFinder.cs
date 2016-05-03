@@ -9,17 +9,17 @@ namespace KnuthMorrisPrattAlgorithm
 		{
 			var results = new List<int>();
 
-			if (what.Length > _sourceText.Length)
+			if (what.Length > SourceText.Length)
 				return results;
 
 			var prefixes = GetPrefixesForString(what);
 			var i = 0;
-			while (i < _sourceText.Length)
+			while (i < SourceText.Length)
 			{
 				int j;
-				for (j = 0; (i < _sourceText.Length) && (j < what.Length); i++, j++)
+				for (j = 0; (i < SourceText.Length) && (j < what.Length); i++, j++)
 				{
-					while ((j >= 0) && (what[j] != _sourceText[i]))
+					while ((j >= 0) && (what[j] != SourceText[i]))
 					{
 						j = prefixes[j];
 					}
