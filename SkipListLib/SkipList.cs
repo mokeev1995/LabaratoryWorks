@@ -132,6 +132,7 @@ namespace SkipListLib
 
 		public void Add(KeyValuePair<TKey, TValue> item)
 		{
+			Add(item.Key, item.Value);
 		}
 
 		public void Clear()
