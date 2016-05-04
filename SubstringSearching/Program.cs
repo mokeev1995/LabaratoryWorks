@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SubstringCoreLib;
@@ -23,7 +22,7 @@ namespace SubstringSearching
 
 				var positions = (substringFinder.Find(textToFind) ?? new int[0]).ToArray();
 
-				Console.WriteLine($"Найдено {positions.Length} встреч. Способ: {substringFinder.ToString()}");
+				Console.WriteLine($"Найдено: {positions.Length}. Способ: {substringFinder.ToString()}");
 
 				if (positions.Length <= 0) continue;
 
@@ -31,7 +30,9 @@ namespace SubstringSearching
 				var decision = (Console.ReadLine() ?? "").ToLower();
 				if (decision == "y" || decision == "д")
 				{
-					Console.WriteLine(positions.Select(item => Convert.ToString(item)).Aggregate((first, second) => first + ", " + second));
+					Console.WriteLine("\t" +
+					                  positions.Select(item => Convert.ToString(item))
+						                  .Aggregate((first, second) => first + ", \n\t" + second));
 				}
 			}
 
