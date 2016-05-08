@@ -9,64 +9,6 @@ namespace RabinKarpAlgorithm
 	{
 		private const int PrimeNumber = 31;
 
-		/*private static long Hash(string stringForHashing)
-		{
-			return stringForHashing
-				.Select((symbol, index) => (long)Math.Pow(PrimeNumber, stringForHashing.Length - 1 - index) * symbol)
-				.Sum();
-		}
-
-		private long Hash(long oldHash, string what, int index)
-		{
-			return (oldHash - (long)Math.Pow(PrimeNumber, what.Length - 1) * SourceText[index]) * PrimeNumber +
-									   SourceText[index + what.Length];
-		}
-
-		public override IEnumerable<long> Find(string what)
-		{
-			var positions = new List<long>();
-
-
-			if (what.Length > SourceText.Length)
-				return positions;
-
-			var findingStringHash = Hash(what); 
-			var sourceStringHash = Hash(SourceText.Substring(0, what.Length));
-
-			for (var index = 0; index <= SourceText.Length - what.Length; index++)
-			{
-				if (findingStringHash == sourceStringHash)
-				{
-					var partOfSourceIsEqualToFindingString = true;
-					var j = 0;
-					while (partOfSourceIsEqualToFindingString && (j < what.Length))
-					{
-						if (what[j] != SourceText[index + j])
-							partOfSourceIsEqualToFindingString = false;
-						j++;
-					}
-
-					if (partOfSourceIsEqualToFindingString)
-						positions.Add(index);
-				}
-				else if(index + what.Length < SourceText.Length)
-				{
-					sourceStringHash = Hash(sourceStringHash, what, index);
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			return positions;
-		}*/
-
-		private static ulong MaxOf(params ulong[] items)
-		{
-			return items.Max();
-		}
-
 		public override IEnumerable<ulong> Find(string what)
 		{
 			var positions = new List<ulong>();
@@ -77,7 +19,8 @@ namespace RabinKarpAlgorithm
 			var whatLength = Convert.ToUInt64(what.Length);
 			var sourceLength = Convert.ToUInt64(SourceText.Length);
 
-			var poweredHashes = new ulong[MaxOf(whatLength, sourceLength)];
+			// считаем все степени
+			var poweredHashes = new ulong[sourceLength];
 
 			poweredHashes[0] = 1;
 			for (var i = 1L; i < poweredHashes.LongLength; i++)
@@ -85,6 +28,7 @@ namespace RabinKarpAlgorithm
 				poweredHashes[i] = poweredHashes[i - 1]*PrimeNumber;
 			}
 
+			// считаем хэши от всех префиксов строки SourceText
 			var h = new ulong[sourceLength];
 			for (var i = 0UL; i < sourceLength; i++)
 			{
@@ -93,9 +37,11 @@ namespace RabinKarpAlgorithm
 				if (i != 0) h[i] += h[i - 1];
 			}
 
+			// считаем хэш от строки what
 			var whatStringHashItems = what.Select((symbol, index) => (Convert.ToUInt64(symbol) - 'a' + 1UL)*poweredHashes[index]);
 			var whatStringHash = whatStringHashItems.Aggregate(0UL, (current, item) => current + item);
 
+			// перебираем все подстроки T длины |S| и сравниваем их
 			for (var i = 0UL; i + whatLength - 1 < sourceLength; ++i)
 			{
 				var currentHash = h[i + whatLength - 1];
