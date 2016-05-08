@@ -24,7 +24,7 @@ namespace SkipListApp
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 
-			foreach (var item in Enumerable.Range(0, 10000))
+			foreach (var item in Enumerable.Range(0, 1000000))
 			{
 				list.Add(new KeyValuePair<int, int>(item, item));
 			}

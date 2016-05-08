@@ -7,7 +7,7 @@ namespace SubstringCoreLib
 	{
 		void SetSource(string source);
 
-		IEnumerable<int> Find(string what);
+		IEnumerable<ulong> Find(string what);
 
 		string ToString();
 	}

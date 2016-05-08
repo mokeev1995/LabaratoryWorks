@@ -37,8 +37,8 @@ namespace KnuthMorrisPrattFinderTests
 			var found = _kmp.Find(what).ToArray();
 
 			Assert.AreEqual(found.Length, 2);
-			Assert.AreEqual(0, found[0]);
-			Assert.AreEqual(4, found[1]);
+			Assert.AreEqual(0UL, found[0]);
+			Assert.AreEqual(4UL, found[1]);
 		}
 
 		[TestMethod]
@@ -51,7 +51,7 @@ namespace KnuthMorrisPrattFinderTests
 			var found = _kmp.Find(what).ToArray();
 
 			Assert.AreEqual(found.Length, 1);
-			Assert.AreEqual(7, found[0]);
+			Assert.AreEqual(7UL, found[0]);
 		}
 
 		[TestMethod]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using SubstringCoreLib;
@@ -20,9 +21,14 @@ namespace SubstringSearching
 			{
 				substringFinder.SetSource(sourceText);
 
-				var positions = (substringFinder.Find(textToFind) ?? new int[0]).ToArray();
+				var sw = new Stopwatch();
 
-				Console.WriteLine($"Найдено: {positions.Length}. Способ: {substringFinder.ToString()}");
+				sw.Start();
+				var pos = substringFinder.Find(textToFind);
+				sw.Stop();
+
+				var positions = (pos ?? new ulong[0]).ToArray();
+				Console.WriteLine($"Найдено: {positions.Length}. Способ: {substringFinder.ToString()} за {sw.Elapsed}");
 
 				if (positions.Length <= 0) continue;
 

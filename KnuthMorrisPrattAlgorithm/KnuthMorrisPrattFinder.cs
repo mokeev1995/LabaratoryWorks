@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SubstringCoreLib;
 
 namespace KnuthMorrisPrattAlgorithm
 {
 	public class KnuthMorrisPrattFinder : SubstringFinder
 	{
-		public override IEnumerable<int> Find(string what)
+		public override IEnumerable<ulong> Find(string what)
 		{
-			var results = new List<int>();
+			var positions = new List<ulong>();
 
 			if (what.Length > SourceText.Length)
-				return results;
+				return positions;
 
 			var prefixes = GetPrefixesForString(what);
 			var i = 0;
@@ -26,10 +28,10 @@ namespace KnuthMorrisPrattAlgorithm
 				}
 
 				if (j == what.Length)
-					results.Add(i - j);
+					positions.Add(Convert.ToUInt64(i - j));
 			}
 
-			return results;
+			return positions;
 		}
 
 		private static int[] GetPrefixesForString(string incomeString)

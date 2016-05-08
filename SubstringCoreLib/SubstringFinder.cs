@@ -12,7 +12,7 @@ namespace SubstringCoreLib
 			SourceText = source;
 		}
 
-		public abstract IEnumerable<int> Find(string what);
+		public abstract IEnumerable<ulong> Find(string what);
 
 		public abstract override string ToString();
 	}

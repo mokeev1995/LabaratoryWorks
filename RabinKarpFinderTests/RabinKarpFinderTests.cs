@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RabinKarpAlgorithm;
 
@@ -23,7 +25,7 @@ namespace RabinKarpFinderTests
 
 			_rk.SetSource(where);
 			var found = _rk.Find(what);
-			Assert.AreEqual(found.Count(), 0);
+			Assert.AreEqual(0, found.Count());
 		}
 
 		[TestMethod]
@@ -36,8 +38,8 @@ namespace RabinKarpFinderTests
 			var found = _rk.Find(what).ToArray();
 
 			Assert.AreEqual(found.Length, 2);
-			Assert.AreEqual(0, found[0]);
-			Assert.AreEqual(4, found[1]);
+			Assert.AreEqual(0UL, found[0]);
+			Assert.AreEqual(4UL, found[1]);
 		}
 
 		[TestMethod]
@@ -50,7 +52,7 @@ namespace RabinKarpFinderTests
 			var found = _rk.Find(what).ToArray();
 
 			Assert.AreEqual(found.Length, 1);
-			Assert.AreEqual(7, found[0]);
+			Assert.AreEqual(7UL, found[0]);
 		}
 
 		[TestMethod]
@@ -58,6 +60,18 @@ namespace RabinKarpFinderTests
 		{
 			const string what = "123456";
 			const string where = "1232123213";
+
+			_rk.SetSource(where);
+			var found = _rk.Find(what).ToArray();
+
+			Assert.AreEqual(found.Length, 0);
+		}
+
+		[TestMethod]
+		public void ShouldNotFindAnything()
+		{
+			const string what = "tmp.Sum(d => d)";
+			string where = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "anna.txt"));
 
 			_rk.SetSource(where);
 			var found = _rk.Find(what).ToArray();
