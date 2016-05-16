@@ -6,14 +6,16 @@ namespace GraphLib
 {
 	public class Graph
 	{
-		private IEnumerable<Edge> _edges;
+		private ICollection<Edge> _edges;
+		private int PointsCount { get; set; }
 
-		private Graph(IEnumerable<Edge> edges)
+		private Graph(ICollection<Edge> edges, int pointsCount)
 		{
 			_edges = edges;
+			PointsCount = pointsCount;
 		}
 
-		public static Graph Build(string[] file)
+		public static Graph Build(string[] file, ICollection<Edge> dataStorage)
 		{
 			if (file.Length < 1)
 				throw new ArgumentException("No info in file!");
@@ -30,7 +32,7 @@ namespace GraphLib
 				points[i] = new Point(i);
 			}
 
-			var edges = new List<Edge>(count*(count - 1)/2);
+			var edges = dataStorage;
 
 			for (var i = 1; i < count + 1; i++)
 			{
@@ -51,7 +53,7 @@ namespace GraphLib
 				}
 			}
 
-			return new Graph(edges);
+			return new Graph(edges, count);
 		}
 	}
 }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace GraphLib
 {
-	internal class Edge : IEquatable<Edge>
+	public class Edge : IEquatable<Edge>
 	{
 		public Edge(Point from, Point to, int weight)
 		{

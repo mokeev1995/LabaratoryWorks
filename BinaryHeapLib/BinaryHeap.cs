@@ -1,148 +1,158 @@
 ﻿using System;
+using System.Linq;
 
 namespace BinaryHeapLib
 {
-	internal class BinaryHeap<T> where T : IComparable
+	public class BinaryHeap<T> where T : IComparable
 	{
-		private T[] _arr;
-
-		public BinaryHeap()
-		{
-		}
-
-		private BinaryHeap(BinaryHeap<T> bh)
-		{
-			_arr = new T[bh._arr.Length - 2];
-			for (var i = 0; i < _arr.Length; i++)
-			{
-				_arr[i] = bh._arr[i];
-			}
-			_hapify(0);
-		}
+		private T[] _data;
 
 		public T this[int i]
 		{
-			get { return _arr[i]; }
-			set { _arr[i] = value; }
+			get { return _data[i]; }
+			set { _data[i] = value; }
 		}
 
-		private void _shake()
+		public int Count => _data?.Length ?? 0;
+
+		private void Shake()
 		{
-			for (var i = _arr.Length/2 - 1; i >= 0; i--)
+			for (var i = _data.Length/2 - 1; i >= 0; i--)
 			{
-				_hapify(i);
+				Heapify(i);
 			}
 		}
 
-
-		private void _hapify(int i)
+		private void Heapify(int itemIdx)
 		{
-			if (_arr.Length <= 1)
+			while (true)
 			{
-				return;
-			}
-			if (_arr.Length%2 == 0 && _arr.Length/2 == i + 1)
-			{
-				var single = this[2*i + 1];
-				var up = this[i];
-				if (up.CompareTo(single) >= 0)
+				if (_data.Length <= 1)
 				{
 					return;
 				}
-				this[i] = single;
-				this[2*i + 1] = up;
-				return;
-			}
-			var left = this[2*i + 1];
-			var right = this[2*i + 2];
-			var big = this[i];
-			if (big.CompareTo(right) > 0 && big.CompareTo(left) > 0)
-			{
-				return;
-			}
-			if (left.CompareTo(right) >= 0)
-			{
-				this[i] = left;
-				this[2*i + 1] = big;
-				if (2*i + 1 < _arr.Length/2)
+
+				if (_data.Length%2 == 0 && _data.Length/2 == itemIdx + 1)
 				{
-					_hapify(2*i + 1);
+					var single = this[2*itemIdx + 1];
+					var up = this[itemIdx];
+					if (up.CompareTo(single) <= 0)
+					{
+						return;
+					}
+					this[itemIdx] = single;
+					this[2*itemIdx + 1] = up;
+					return;
 				}
-			}
-			else
-			{
-				this[i] = right;
-				this[2*i + 2] = big;
-				if (2*i + 2 < _arr.Length/2)
+				var left = this[2*itemIdx + 1];
+				var right = this[2*itemIdx + 2];
+				var big = this[itemIdx];
+				if (big.CompareTo(right) < 0 && big.CompareTo(left) < 0)
 				{
-					_hapify(2*i + 2);
+					return;
 				}
+				if (left.CompareTo(right) <= 0)
+				{
+					this[itemIdx] = left;
+					this[2*itemIdx + 1] = big;
+					if (2*itemIdx + 1 < _data.Length/2)
+					{
+						itemIdx = 2*itemIdx + 1;
+						continue;
+					}
+				}
+				else
+				{
+					this[itemIdx] = right;
+					this[2*itemIdx + 2] = big;
+					if (2*itemIdx + 2 < _data.Length/2)
+					{
+						itemIdx = 2*itemIdx + 2;
+						continue;
+					}
+				}
+				break;
 			}
 		}
 
-		private void _sort()
+		private void Sort()
 		{
-			_shake();
-			var n = _arr.Length;
-			var newarr = new T[n];
-			for (var i = 0; i <= n - 1; i++)
+			Shake();
+			var itemsCount = _data.Length;
+			var newarr = new T[itemsCount];
+			for (var i = 0; i <= itemsCount - 1; i++)
 			{
-				newarr[_arr.Length - 1] = _arr[0];
-				;
-				_arr[0] = _arr[_arr.Length - 1];
-				var temparr = _arr;
-				_arr = new T[temparr.Length - 1];
-				for (var j = 0; j < _arr.Length; j++)
+				newarr[_data.Length - 1] = _data[0];
+				_data[0] = _data[_data.Length - 1];
+				var temparr = _data;
+				_data = new T[temparr.Length - 1];
+				for (var j = 0; j < _data.Length; j++)
 				{
-					_arr[j] = temparr[j];
+					_data[j] = temparr[j];
 				}
-				_hapify(0);
+				Heapify(0);
 			}
-			_arr = newarr;
+			_data = newarr;
 		}
 
 		public void Add(T item)
 		{
-			if (_arr == null)
+			if (_data == null)
 			{
-				_arr = new[] {item};
+				_data = new[] {item};
 			}
 			else
 			{
-				var temp = _arr;
-				_arr = new T[temp.Length + 1];
+				var temp = _data;
+				_data = new T[temp.Length + 1];
 				for (var i = 0; i < temp.Length; i++)
 				{
-					_arr[i] = temp[i];
+					_data[i] = temp[i];
 				}
-				_arr[temp.Length] = item;
-				_sort();
+				_data[temp.Length] = item;
+				Up(temp.Length);
 			}
 		}
 
-		public T GetMax()
+		private void Up(int i)
 		{
-			return _arr[_arr.Length - 1];
+			while (true)
+			{
+				if (i == 0)
+				{
+					return;
+				}
+				var father = this[(i - 1)/2];
+				var current = this[i];
+				if (father.CompareTo(current) < 0)
+				{
+					this[(i - 1)/2] = current;
+					this[i] = father;
+					i = (i - 1)/2;
+					continue;
+				}
+				break;
+			}
 		}
 
-		public void DelMax()
+		public T GetMaximum()
 		{
-			var temparr = _arr;
-			_arr = new T[temparr.Length - 1];
+			return _data[_data.Length - 1];
+		}
+
+		public void DeleteMaximum()
+		{
+			var temparr = _data;
+			_data = new T[temparr.Length - 1];
 			for (var i = 0; i < temparr.Length - 1; i++)
 			{
-				_arr[i] = temparr[i];
+				_data[i] = temparr[i];
 			}
 		}
 
 		public override string ToString()
 		{
-			var res = "";
-			for (var i = 0; i < _arr.Length; i++)
-			{
-				res += _arr[i].ToString() + ' ';
-			}
-			return res;
+			return _data.Aggregate("", (current, t) => current + (t.ToString() + ' '));
 		}
 	}
 }

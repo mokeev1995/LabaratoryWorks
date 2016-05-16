@@ -2,7 +2,7 @@ using System;
 
 namespace GraphLib
 {
-	internal class Point : IEquatable<Point>
+	public class Point : IEquatable<Point>
 	{
 		public Point(int number)
 		{
