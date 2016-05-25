@@ -7,6 +7,10 @@ namespace Lab5
 	{
 		private static void Main()
 		{
+		}
+
+		private static void Tests()
+		{
 			IBinaryHeap<double> heap = new MaxBinaryHeap<double>();
 			heap.Add(1);
 			heap.Add(2);
