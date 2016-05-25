@@ -41,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryHeap.cs" />
+    <Compile Include="IBinaryHeap.cs" />
+    <Compile Include="MaxBinaryHeap.cs" />
+    <Compile Include="MinBinaryHeap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
