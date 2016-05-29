@@ -11,7 +11,7 @@ namespace Lab5
 		{
 			IReaderWriter readerWriter = new ConsoleReaderWriter();
 
-			var weights = WeightsReader.Read(readerWriter).ToArray();
+			var weights = WeightsReader.Read(readerWriter);
 
 			var storage = new MaxBinaryHeap<double> {1};
 
