@@ -1,16 +1,30 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BinaryHeapLib
 {
 	public abstract class BinaryHeap<T> : IBinaryHeap<T> where T : IComparable
 	{
+		protected BinaryHeap()
+		{
+		}
+
+		protected BinaryHeap(IEnumerable<T> items)
+		{
+			foreach (var item in items)
+			{
+				Add(item);
+			}
+		}
+
 		private T[] _items;
 
-		public T this[int i]
+		public T this[int index]
 		{
-			get { return _items[i]; }
-			set { _items[i] = value; }
+			get { return _items[index]; }
+			set { _items[index] = value; }
 		}
 
 		public int Count => _items?.Length ?? 0;
@@ -51,12 +65,22 @@ namespace BinaryHeapLib
 			Sort();
 		}
 
+		public IEnumerator<T> GetEnumerator()
+		{
+			return ((IEnumerable<T>) _items).GetEnumerator();
+		}
+
 		public override string ToString()
 		{
 			return _items.Aggregate("", (current, t) => current + (t.ToString() + ' '));
 		}
 
-		private void Heapify(int itemIdx)
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return _items.GetEnumerator();
+		}
+
+		public void RestoreHeapPropertiesFromItem(int itemIdx)
 		{
 			while (true)
 			{
@@ -128,26 +152,26 @@ namespace BinaryHeapLib
 				{
 					_items[j] = temparr[j];
 				}
-				Heapify(0);
+				RestoreHeapPropertiesFromItem(0);
 			}
 			_items = newarr;
 		}
 
-		private void UpOrDown(int i)
+		private void UpOrDown(int currentIndex)
 		{
 			while (true)
 			{
-				if (i == 0)
+				if (currentIndex == 0)
 					return;
 
-				var parentItem = this[(i - 1)/2];
-				var current = this[i];
+				var parentItem = this[(currentIndex - 1)/2];
+				var current = this[currentIndex];
 
 				if (Compare(parentItem, current) < 0)
 				{
-					this[(i - 1)/2] = current;
-					this[i] = parentItem;
-					i = (i - 1)/2;
+					this[(currentIndex - 1)/2] = current;
+					this[currentIndex] = parentItem;
+					currentIndex = (currentIndex - 1)/2;
 					continue;
 				}
 
@@ -161,7 +185,7 @@ namespace BinaryHeapLib
 		{
 			for (var i = _items.Length/2 - 1; i >= 0; i--)
 			{
-				Heapify(i);
+				RestoreHeapPropertiesFromItem(i);
 			}
 		}
 	}
