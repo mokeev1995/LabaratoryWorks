@@ -7,10 +7,10 @@ namespace GraphLib
 {
 	public class Graph
 	{
-		private ICollection<Edge> _edges;
-		private int PointsCount { get; set; }
+		private readonly BinaryHeap<Edge> _edges;
+		private int PointsCount { get; }
 
-		private Graph(ICollection<Edge> edges, int pointsCount)
+		private Graph(BinaryHeap<Edge> edges, int pointsCount)
 		{
 			_edges = edges;
 			PointsCount = pointsCount;
@@ -55,6 +55,39 @@ namespace GraphLib
 			}
 
 			return new Graph(edges, count);
+		}
+
+		public MinimumSpanningTree GetMst()
+		{
+			var weight = 0D;
+
+			var items = new List<Point>();
+
+			var source = new MinBinaryHeap<Edge>(_edges);
+
+			while (source.Count > 0)
+			{
+				var element = source.GetTopElement();
+				source.DeleteTopElement();
+				if (items.Contains(element.To))
+					continue;
+				items.Add(element.To);
+				weight += element.Weight;
+			}
+
+			return new MinimumSpanningTree(items, weight);
+		}
+	}
+
+	public class MinimumSpanningTree
+	{
+		public IEnumerable<Point> PointsRoute { get; }
+		public double Weight { get; }
+
+		public MinimumSpanningTree(IEnumerable<Point> pointsRoute, double weight)
+		{
+			PointsRoute = pointsRoute;
+			Weight = weight;
 		}
 	}
 }

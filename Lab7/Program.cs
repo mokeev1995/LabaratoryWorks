@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using GraphLib;
 
 namespace Lab7
@@ -20,7 +21,24 @@ namespace Lab7
 
 			var graph = Graph.Build(text);
 
+			var mst = graph.GetMst();
+
+			Console.WriteLine($"Weight: {mst.Weight}. Included points: {PrintRoute(mst.PointsRoute)}");
+
 			Console.ReadKey();
+		}
+
+		private static string PrintRoute(IEnumerable<Point> points)
+		{
+			var text = new StringBuilder();
+			foreach (var point in points)
+			{
+				text.Append(point.Number + ", ");
+			}
+
+			text.Remove(text.Length - 2, 2);
+
+			return text.ToString();
 		}
 	}
 }

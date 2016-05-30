@@ -10,12 +10,7 @@ namespace GraphLib
 		}
 
 		public int Number { get; }
-
-		bool IEquatable<Point>.Equals(Point other)
-		{
-			return Equals(other);
-		}
-
+		
 		public bool Equals(Point other)
 		{
 			if (ReferenceEquals(null, other)) return false;
@@ -50,7 +45,7 @@ namespace GraphLib
 
 		public override string ToString()
 		{
-			return $"Point Number: {Number}";
+			return $"Point: {Number}";
 		}
 	}
 }

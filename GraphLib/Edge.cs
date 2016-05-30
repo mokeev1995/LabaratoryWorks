@@ -5,7 +5,7 @@ namespace GraphLib
 {
 	public class Edge : IEquatable<Edge>, IComparable<Edge>, IComparable
 	{
-		public Edge(Point from, Point to, int weight)
+		public Edge(Point from, Point to, double weight)
 		{
 			From = from;
 			To = to;
@@ -14,13 +14,13 @@ namespace GraphLib
 
 		public Point From { get; }
 		public Point To { get; }
-		public int Weight { get; }
+		public double Weight { get; }
 
 		public bool Equals(Edge other)
 		{
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
-			return Equals(From, other.From) && Equals(To, other.To) && Weight == other.Weight;
+			return Equals(From, other.From) && Equals(To, other.To) && Weight.Equals(other.Weight);
 		}
 
 		public bool ContainsPoints(params Point[] points)
@@ -39,8 +39,7 @@ namespace GraphLib
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != GetType()) return false;
-			return Equals((Edge) obj);
+			return obj.GetType() == GetType() && Equals((Edge) obj);
 		}
 
 		public override int GetHashCode()
@@ -49,7 +48,7 @@ namespace GraphLib
 			{
 				var hashCode = From?.GetHashCode() ?? 0;
 				hashCode = (hashCode*397) ^ (To?.GetHashCode() ?? 0);
-				hashCode = (hashCode*397) ^ Weight;
+				hashCode = (hashCode*397) ^ Weight.GetHashCode();
 				return hashCode;
 			}
 		}
