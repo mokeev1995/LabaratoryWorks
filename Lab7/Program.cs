@@ -20,9 +20,9 @@ namespace Lab7
 				"0,1;1,4;2,6;3,7;",
 			};
 
-			var file = Environment.CurrentDirectory + "TestData.txt";
+			/*var file = Environment.CurrentDirectory + "TestData.txt";
 			if (File.Exists(file))
-			text = File.ReadAllLines(file);
+				text = File.ReadAllLines(file);*/
 
 			var graph = Graph.Build(text);
 
