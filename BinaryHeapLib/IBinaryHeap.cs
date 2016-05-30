@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BinaryHeapLib
 {
-	public interface IBinaryHeap<T> : IEnumerable<T> where T : IComparable
+	public interface IBinaryHeap<T> : ICollection<T> where T : IComparable
 	{
 		T this[int index] { get; set; }
 		int Count { get; }

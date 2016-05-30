@@ -18,7 +18,7 @@ namespace Lab7
 				"0,1;1,4;2,6;3,7;",
 			};
 
-			var graph = Graph.Build(text, new List<Edge>());
+			var graph = Graph.Build(text);
 
 			Console.ReadKey();
 		}

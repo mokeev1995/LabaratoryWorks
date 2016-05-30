@@ -27,7 +27,13 @@ namespace BinaryHeapLib
 			set { _items[index] = value; }
 		}
 
+		public bool Remove(T item)
+		{
+			throw new NotImplementedException();
+		}
+
 		public int Count => _items?.Length ?? 0;
+		public bool IsReadOnly { get; } = false;
 
 		public void Add(T item)
 		{
@@ -39,13 +45,25 @@ namespace BinaryHeapLib
 			{
 				var temp = _items;
 				_items = new T[temp.Length + 1];
-				for (var i = 0; i < temp.Length; i++)
-				{
-					_items[i] = temp[i];
-				}
+				Array.Copy(temp, _items, temp.Length);
 				_items[temp.Length] = item;
-				UpOrDown(temp.Length);
+				LiftElementUp(temp.Length);
 			}
+		}
+
+		public void Clear()
+		{
+			_items = new T[0];
+		}
+
+		public bool Contains(T item)
+		{
+			return _items.Contains(item);
+		}
+
+		public void CopyTo(T[] array, int arrayIndex)
+		{
+			_items.CopyTo(array, arrayIndex);
 		}
 
 		public T GetTopElement()
@@ -67,7 +85,7 @@ namespace BinaryHeapLib
 
 		public IEnumerator<T> GetEnumerator()
 		{
-			return ((IEnumerable<T>) _items).GetEnumerator();
+			return ((IEnumerable<T>) _items)?.GetEnumerator() ?? Enumerable.Empty<T>().GetEnumerator();
 		}
 
 		public override string ToString()
@@ -157,7 +175,7 @@ namespace BinaryHeapLib
 			_items = newarr;
 		}
 
-		private void UpOrDown(int currentIndex)
+		private void LiftElementUp(int currentIndex)
 		{
 			while (true)
 			{
@@ -181,7 +199,7 @@ namespace BinaryHeapLib
 
 		protected abstract int Compare(T first, T second);
 
-		protected void RestoreHeapProperties()
+		private void RestoreHeapProperties()
 		{
 			for (var i = _items.Length/2 - 1; i >= 0; i--)
 			{

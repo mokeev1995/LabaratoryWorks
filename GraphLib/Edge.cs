@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace GraphLib
 {
-	public class Edge : IEquatable<Edge>
+	public class Edge : IEquatable<Edge>, IComparable<Edge>, IComparable
 	{
 		public Edge(Point from, Point to, int weight)
 		{
@@ -52,6 +52,16 @@ namespace GraphLib
 				hashCode = (hashCode*397) ^ Weight;
 				return hashCode;
 			}
+		}
+
+		public int CompareTo(object obj)
+		{
+			return CompareTo((Edge) obj);
+		}
+
+		public int CompareTo(Edge otherEdge)
+		{
+			return Weight.CompareTo(otherEdge.Weight);
 		}
 
 		public static bool operator !=(Edge first, Edge second)

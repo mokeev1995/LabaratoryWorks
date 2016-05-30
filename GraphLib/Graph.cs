@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BinaryHeapLib;
 
 namespace GraphLib
 {
@@ -15,7 +16,7 @@ namespace GraphLib
 			PointsCount = pointsCount;
 		}
 
-		public static Graph Build(string[] file, ICollection<Edge> dataStorage)
+		public static Graph Build(string[] file)
 		{
 			if (file.Length < 1)
 				throw new ArgumentException("No info in file!");
@@ -32,7 +33,7 @@ namespace GraphLib
 				points[i] = new Point(i);
 			}
 
-			var edges = dataStorage;
+			var edges = new MinBinaryHeap<Edge>();
 
 			for (var i = 1; i < count + 1; i++)
 			{
