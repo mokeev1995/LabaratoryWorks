@@ -16,6 +16,22 @@ namespace GraphLib
 		public Point To { get; }
 		public double Weight { get; }
 
+		public int State
+		{
+			get
+			{
+				if (From.AddedMark == To.AddedMark)
+					return From.AddedMark;
+
+				return -2;
+			}
+			set
+			{
+				From.AddedMark = value;
+				To.AddedMark = value;
+			}
+		}
+
 		public bool Equals(Edge other)
 		{
 			if (ReferenceEquals(null, other)) return false;

@@ -2,12 +2,16 @@ using System;
 
 namespace GraphLib
 {
+
 	public class Point : IEquatable<Point>
 	{
 		public Point(int number)
 		{
 			Number = number;
+			AddedMark = -1;
 		}
+
+		public int AddedMark { get; set; }
 
 		public int Number { get; }
 		
@@ -34,18 +38,18 @@ namespace GraphLib
 		{
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != GetType()) return false;
+			if (obj.GetType() != this.GetType()) return false;
 			return Equals((Point) obj);
 		}
 
 		public override int GetHashCode()
 		{
-			return Number;
+			return Number.GetHashCode();
 		}
 
 		public override string ToString()
 		{
-			return $"Point: {Number}";
+			return $"Point: {Number}, Mark: {AddedMark}";
 		}
 	}
 }

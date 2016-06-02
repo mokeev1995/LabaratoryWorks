@@ -7,13 +7,15 @@ namespace GraphLib
 {
 	public class Graph
 	{
+		private readonly Point[] _poits;
 		private readonly BinaryHeap<Edge> _edges;
 		private int PointsCount { get; }
 
-		private Graph(BinaryHeap<Edge> edges, int pointsCount)
+		private Graph(BinaryHeap<Edge> edges, int pointsCount, Point[] poits)
 		{
 			_edges = edges;
 			PointsCount = pointsCount;
+			_poits = poits;
 		}
 
 		public static Graph Build(string[] file)
@@ -26,12 +28,7 @@ namespace GraphLib
 			if (file.Length < count + 1)
 				throw new ArgumentException("Wrong lines count!");
 
-			var points = new Point[count];
-
-			for (var i = 0; i < count; i++)
-			{
-				points[i] = new Point(i);
-			}
+			var points = Enumerable.Range(0, count).Select(i => new Point(i)).ToArray();
 
 			var edges = new MinBinaryHeap<Edge>();
 
@@ -47,35 +44,73 @@ namespace GraphLib
 					var position = int.Parse(positionInString[0]);
 					var weight = int.Parse(positionInString[1]);
 
-					if (!edges.Any(edge => edge.ContainsPoints(points[i - 1], points[position])))
+					var from = points[i - 1];
+					var to = points[position];
+					if (!edges.Any(edge => edge.ContainsPoints(from, to)))
 					{
-						edges.Add(new Edge(points[i - 1], points[position], weight));
+						edges.Add(new Edge(from, to, weight));
 					}
 				}
 			}
 
-			return new Graph(edges, count);
+			return new Graph(edges, count, points);
 		}
 
 		public MinimumSpanningTree GetMst()
 		{
-			var weight = 0D;
-
-			var items = new List<Point>();
+			var selectedItems = new List<Edge>();
 
 			var source = new MinBinaryHeap<Edge>(_edges);
+
+			var mark = 1;
 
 			while (source.Count > 0)
 			{
 				var element = source.GetTopElement();
 				source.DeleteTopElement();
-				if (items.Contains(element.To))
-					continue;
-				items.Add(element.To);
-				weight += element.Weight;
+
+				if (!CycleFound(selectedItems, element))
+				{
+					selectedItems.Add(element);
+					var localMark = mark;
+					var foundEdge = selectedItems.Where(
+						edge =>
+							edge.From.Number == element.From.Number || edge.To.Number == element.From.Number ||
+							edge.From.Number == element.To.Number || edge.To.Number == element.To.Number)
+						.Where(edge => edge.From != element.From && edge.To != element.To)
+						.ToArray();
+
+					var mrkItems = foundEdge.Where(edge => edge.From.AddedMark > 0).ToArray();
+					if (mrkItems.Any())
+					{
+						localMark = mrkItems.Min(edge => edge.From.AddedMark);
+					}
+					foreach (var edge in selectedItems.Where(edge => edge.ContainsPoints(element.From, element.To)))
+					{
+						edge.State = localMark;
+					}
+					element.State = localMark;
+					mark++;
+				}
 			}
 
-			return new MinimumSpanningTree(items, weight);
+			return new MinimumSpanningTree(selectedItems.SelectMany(edge => new[] {edge.From, edge.To}).Distinct().ToArray(), selectedItems.Sum(edge => edge.Weight));
+		}
+
+		private static bool CycleFound(IEnumerable<Edge> edgesAdded, Edge toAdd)
+		{
+			foreach (var edge in edgesAdded)
+			{
+				if (IsSameConnectedComponent(edge, toAdd))
+					return true;
+			}
+			return false;
+		}
+
+		private static bool IsSameConnectedComponent(Edge edge, Edge toAdd)
+		{
+			var firstCase = toAdd.State == edge.State && toAdd.State > 0;
+			return firstCase;
 		}
 	}
 

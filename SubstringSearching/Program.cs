@@ -37,7 +37,7 @@ namespace SubstringSearching
 				if (decision == "y" || decision == "д")
 				{
 					Console.WriteLine("\t" +
-					                  positions.Select(item => Convert.ToString(item))
+					                  positions.Select(Convert.ToString)
 						                  .Aggregate((first, second) => first + ", \n\t" + second));
 				}
 			}
