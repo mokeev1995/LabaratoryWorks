@@ -85,7 +85,8 @@ namespace GraphLib
 					{
 						localMark = mrkItems.Min(edge => edge.From.AddedMark);
 					}
-					foreach (var edge in selectedItems.Where(edge => edge.ContainsPoints(element.From, element.To)))
+					var edges = selectedItems.Where(edge => edge.ContainsPoint(element.From, element.To));
+					foreach (var edge in edges)
 					{
 						edge.State = localMark;
 					}

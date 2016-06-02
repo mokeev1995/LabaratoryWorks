@@ -88,5 +88,10 @@ namespace GraphLib
 		{
 			return $"From: {From}, To: {To}, Weight: {Weight}";
 		}
+
+		public bool ContainsPoint(params Point[] points)
+		{
+			return points.Any(point => point == From || point == To);
+		}
 	}
 }
